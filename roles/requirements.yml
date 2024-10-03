@@ -1,0 +1,13 @@
+---
+collections:
+  - name: ansible.posix
+  - name: ansible.utils
+  - name: community.general
+  - name: community.postgresql
+roles:
+  - src: https://github.com/roles-ansible/ansible_role_gitea
+    name: gitea
+  - src: thulium_drake.ansible_semaphore
+    name: semaphore
+  - src: hispanico.nginx_revproxy
+    name: nginx
