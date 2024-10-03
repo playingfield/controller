@@ -1,1 +1,3 @@
+.vagrant/
+.vscode/
 galaxy_roles/*
