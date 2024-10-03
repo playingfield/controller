@@ -1,0 +1,26 @@
+#!/usr/bin/env ansible-playbook
+# WSO2 API Manager 3.2.0 install
+---
+
+- name: Git Server
+  hosts: controller
+  become: true
+  gather_facts: true
+  vars:
+    postgres_enabled: true
+    # Postgres should listen on localhost when not scaled out
+    postgres_listen_addresses: '127.0.0.1'
+    # Postgresql users and databases/schemas
+    database:
+      gitea:
+        name: gitea
+        owner: gitea
+        username: gitea
+        password: gitea
+        enabled: true
+
+  roles:
+    - role: postgres
+      tags: postgres
+    - role: gitea
+      tags: gitea
