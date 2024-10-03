@@ -1,0 +1,36 @@
+[local]
+localhost connection=local
+
+[dev:children]
+control
+infra
+
+[control]
+controller ansible_host=192.168.56.3
+
+[infra:children]
+linux
+windows
+
+[linux:vars]
+ansible_user=vagrant
+ansible_private_key_file = ~/.vagrant.d/insecure_private_key
+
+[linux]
+almalinux8 ansible_host=192.168.56.8
+debian12 ansible_host=192.168.56.12
+kali ansible_host=192.168.56.13
+ubuntu22 ansible_host=192.168.56.22
+
+[windows]
+windows2022 ansible_host=192.168.56.222
+
+[windows:vars]
+ansible_user=vagrant
+ansible_password=vagrant
+ansible_connection=winrm
+ansible_winrm_scheme=https
+ansible_winrm_server_cert_validation=ignore
+ansible_port=5986
+ansible_become_method=runas
+ansible_become_user=system

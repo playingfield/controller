@@ -1,0 +1,73 @@
+[
+    {
+        "name": "almalinux8",
+        "autostart": false,
+        "cpus": 2,
+        "distro": "ubuntu",
+        "family": "debian",
+        "gui": false,
+        "box": "bento/almalinux-8.10",
+        "ip_addr": "192.168.56.8",
+        "memory": "4096",
+        "no_share": true,
+        "app_port": "22",
+        "forwarded_port": "2208"
+    },
+    {
+        "name": "debian12",
+        "autostart": false,
+        "cpus": 2,
+        "distro": "ubuntu",
+        "family": "debian",
+        "gui": false,
+        "box": "bento/debian-12.6",
+        "ip_addr": "192.168.56.12",
+        "memory": "4096",
+        "no_share": true,
+        "app_port": "22",
+        "forwarded_port": "2212"
+    },
+    {
+        "name": "kali",
+        "autostart": false,
+        "cpus": 1,
+        "distro": "kali",
+        "family": "debian",
+        "gui": true,
+        "box": "kalilinux/rolling",
+        "ip_addr": "192.168.56.13",
+        "memory": "4096",
+        "no_share": true,
+        "app_port": "80",
+        "forwarded_port": "8013"
+    },
+    {
+        "name": "ubuntu22",
+        "autostart": false,
+        "cpus": 2,
+        "distro": "ubuntu",
+        "family": "debian",
+        "gui": false,
+        "box": "bento/ubuntu-22.04",
+        "ip_addr": "192.168.56.22",
+        "memory": "4096",
+        "no_share": true,
+        "app_port": "22",
+        "forwarded_port": "2222"
+    },
+    {
+        "name": "windows2022",
+        "autostart": false,
+        "cpus": 2,
+        "distro": "",
+        "family": "windows",
+        "gui": true,
+        "box": "jborean93/WindowsServer2022",
+        "pip_install": "",
+        "ip_addr": "192.168.56.222",
+        "memory": "4096",
+        "no_share": true,
+        "app_port": "5986 ",
+        "forwarded_port": "45986"
+    }
+]
