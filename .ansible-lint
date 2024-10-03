@@ -1,0 +1,9 @@
+---
+# https://ansible-lint.readthedocs.io/en/latest/default_rules/
+exclude_paths:
+  - galaxy_roles/
+
+skip_list:
+  - experimental  # all rules tagged as experimental
+  - var-naming[no-role-prefix]
+...
