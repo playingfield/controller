@@ -20,7 +20,7 @@ semaphore_admin_pass: "{{ lookup('env', 'DEV_PASS') }}"
 semaphore_admin_email: 'root@localhost'
 
 # WebUI settings
-semaphore_service_uri: 'http://semaphore.example.com'
+semaphore_service_uri: "http://{{ ansible_fqdn | default(ansible_hostname) }}"
 semaphore_port: 8081
 # This key is used to encrypt and hash cookies
 # Generate one with "head -c32 /dev/urandom | base64"
