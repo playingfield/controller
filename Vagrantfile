@@ -56,14 +56,27 @@ Vagrant.configure(2) do |config|
       end
     end
   end
-  config.vm.define 'controller' , autostart: true do |controller|
+  config.vm.define 'controller' , autostart: true, primary: true do |controller|
     controller.vm.box = "bento/almalinux-8.10"
     controller.vm.network "private_network", ip: "192.168.56.3"
+    controller.vm.hostname = "controller"
+    controller.vm.provider :virtualbox do |virtualbox|
+        virtualbox.customize ["modifyvm", :id,
+           "--name", "controller",
+           "--audio", "none",
+           "--graphicscontroller", "VMSVGA",
+           "--cpus", "8",
+           "--memory", 16384,
+           "--vram", "64",
+           "--cableconnected1", "on"
+        ]
+    end
     controller.vm.provision :ansible do |ansible|
       ansible.compatibility_mode = "2.0"
       ansible.playbook = "provision.yml"
       ansible.inventory_path = "inventory/" + $Stage + "/hosts"
       ansible.galaxy_role_file = "roles/requirements.yml"
+      ansible.galaxy_roles_path = "galaxy_roles:roles"
       ansible.groups = {
         "gitea" => ["controller"],
         "semaphore" => ["controller"],
