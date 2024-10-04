@@ -64,6 +64,12 @@ Vagrant.configure(2) do |config|
       ansible.playbook = "provision.yml"
       ansible.inventory_path = "inventory/" + $Stage + "/hosts"
       ansible.galaxy_role_file = "roles/requirements.yml"
+      ansible.groups = {
+        "gitea" => ["controller"],
+        "semaphore" => ["controller"],
+        "database" => ["controller"],
+        "web" => ["controller"]
+      }
       ansible.verbose = "v"
       ansible.limit = "all" # or only "nodes" group, etc.
     end

@@ -2,25 +2,35 @@
 # WSO2 API Manager 3.2.0 install
 ---
 
-- name: Git Server
-  hosts: controller
+- name: Database Server
+  hosts: database
   become: true
   gather_facts: true
-  vars:
-    postgres_enabled: true
-    # Postgres should listen on localhost when not scaled out
-    postgres_listen_addresses: '127.0.0.1'
-    # Postgresql users and databases/schemas
-    database:
-      gitea:
-        name: gitea
-        owner: gitea
-        username: gitea
-        password: gitea
-        enabled: true
-
   roles:
     - role: postgres
-      tags: postgres
+      tags: [postgres]
+
+- name: Git Server
+  hosts: git
+  become: true
+  gather_facts: true
+  roles:
     - role: gitea
-      tags: gitea
+      tags: [gitea]
+
+
+- name: Semaphore
+  hosts: semaphore
+  become: true
+  gather_facts: true
+  roles:
+    - role: semaphore
+      tags: [semaphore]
+
+- name: Reverse Proxy
+  hosts: web
+  become: true
+  gather_facts: true
+  roles:
+    - role: nginx
+      tags: [nginx]

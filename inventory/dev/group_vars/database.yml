@@ -1,0 +1,18 @@
+---
+postgres_enabled: true
+# Postgres should listen on localhost when not scaled out
+postgres_listen_addresses: '127.0.0.1'
+# Postgresql users and databases/schemas
+database:
+  gitea:
+    name: gitea
+    owner: gitea
+    username: gitea
+    password: "{{ lookup('env', 'DEV_PASS') }}"
+    enabled: true
+  semaphore:
+    name: semaphore
+    owner: semaphore
+    username: semaphore
+    password: "{{ lookup('env', 'DEV_PASS') }}"
+    enabled: true

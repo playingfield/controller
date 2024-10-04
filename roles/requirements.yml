@@ -5,7 +5,7 @@ collections:
   - name: community.general
   - name: community.postgresql
 roles:
-  - src: https://github.com/roles-ansible/ansible_role_gitea
+  - src: roles-ansible.gitea
     name: gitea
   - src: thulium_drake.ansible_semaphore
     name: semaphore
