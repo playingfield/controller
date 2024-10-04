@@ -12,5 +12,5 @@ roles:
     name: gitea
   - src: thulium_drake.ansible_semaphore
     name: semaphore
-  - src: hispanico.nginx_revproxy
+  - src: bbaassssiiee.nginx_ssl
     name: nginx
