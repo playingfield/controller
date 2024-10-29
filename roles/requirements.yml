@@ -2,6 +2,8 @@
 roles:
   - src: bbaassssiiee.postgres_ssl
     name: postgres
+  - src: bbaassssiiee.nginx_ssl
+    name: nginx
   - src: roles-ansible.gitea
     name: gitea
   - src: thulium_drake.ansible_semaphore
