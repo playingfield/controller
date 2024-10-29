@@ -6,7 +6,7 @@
 gitea_fork: forgejo
 gitea_force_private: true
 gitea_fqdn: "{{ ansible_fqdn | default(ansible_hostname) }}"
-gitea_http_port: 8082
+gitea_http_port: 3000
 gitea_protocol: http
 gitea_root_url: "https://{{ ansible_fqdn | default(ansible_hostname) }}"
 gitea_shell: /bin/bash
