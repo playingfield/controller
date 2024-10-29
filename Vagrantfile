@@ -76,7 +76,7 @@ Vagrant.configure(2) do |config|
       ansible.playbook = "provision.yml"
       ansible.inventory_path = "inventory/" + $Stage + "/hosts"
       ansible.galaxy_role_file = "roles/requirements.yml"
-      ansible.galaxy_roles_path = "galaxy_roles:roles"
+      ansible.galaxy_roles_path = "galaxy_roles"
       ansible.groups = {
         "gitea" => ["controller"],
         "semaphore" => ["controller"],
