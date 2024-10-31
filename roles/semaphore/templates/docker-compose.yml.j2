@@ -1,0 +1,31 @@
+services:
+    semaphore:
+        ports:
+            - {{ bind_port }}:{{ semaphore_port }}
+        image: semaphoreui/semaphore:v2.10.32
+        environment:
+          - SEMAPHORE_DB_DIALECT=postgres
+          - SEMAPHORE_DB_HOST={{ ansible_eth1.ipv4.address }}
+          - SEMAPHORE_DB_NAME=${SEMAPHORE_DB_NAME}
+          - SEMAPHORE_DB_USER=${SEMAPHORE_DB_USER}
+          - SEMAPHORE_DB_PASSWORD=${SEMAPHORE_DB_PASSWORD}
+          - SEMAPHORE_ADMIN
+          - SEMAPHORE_ADMIN_PASSWORD
+          - SEMAPHORE_ADMIN_NAME
+          - SEMAPHORE_ADMIN_EMAIL
+          - SEMAPHORE_PORT=3000
+          - SEMAPHORE_GIT_CLIENT= cmd_git
+          - SEMAPHORE_COOKIE_HASH
+          - SEMAPHORE_COOKIE_ENCRYPTION
+          - SEMAPHORE_ACCESS_KEY_ENCRYPTION
+          - SEMAPHORE_WEB_ROOT
+        restart: always
+        volumes:
+            - semaphore_config:/etc/semaphore/
+            - semaphore_data:/var/lib/semaphore
+            - semaphore_tmp:/tmp/semaphore
+
+volumes:
+    semaphore_config:
+    semaphore_data:
+    semaphore_tmp:

@@ -10,20 +10,13 @@
     - role: postgres
       tags: [postgres]
 
-- name: Git Server
-  hosts: git
-  become: true
-  gather_facts: true
-  roles:
-    - role: gitea
-      tags: [gitea]
-
-
 - name: Semaphore
   hosts: semaphore
   become: true
   gather_facts: true
   roles:
+    - role: docker
+      tags: [docker]
     - role: semaphore
       tags: [semaphore]
 

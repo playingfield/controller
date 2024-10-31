@@ -1,0 +1,7 @@
+---
+
+- name: Restart semaphore
+  ansible.builtin.systemd:
+    name: semaphore
+    state: restarted
+
