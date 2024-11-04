@@ -4,4 +4,3 @@
     src: /home/semaphore/.env
     dest: files/
     flat: true
-

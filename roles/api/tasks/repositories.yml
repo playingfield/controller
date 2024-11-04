@@ -30,7 +30,7 @@
         status_code: 204
       register: semaphore_repository_created
       when:
-        (semaphore_repositories.status | int == 404) or ("semaphore_repositories.json | selectattr('name', 'equalto', controller_repository_name) | length == 0")
+        (semaphore_repositories.status == "404") or ("semaphore_repositories.json | selectattr('name', 'equalto', controller_repository_name) | length == 0")
 
     - name: "Determine Repositories (after creation)"
       changed_when: false

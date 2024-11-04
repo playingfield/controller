@@ -29,7 +29,6 @@
     - role: nginx
       tags: [nginx]
 
-
 - name: Configure Semaphore
   hosts: semaphore
   become: true
@@ -52,4 +51,3 @@
   roles:
     - role: api
       tags: [semaphore]
-

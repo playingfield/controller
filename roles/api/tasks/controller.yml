@@ -43,4 +43,3 @@
         semaphore_project_id: "{{ semaphore_project_created.json.id }}"
       when:
         - "'Controller' not in (semaphore_projects.json | map(attribute='name'))"
-
