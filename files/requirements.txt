@@ -1,1 +1,9 @@
 distlib
+docker
+jmespath
+# for common jinja-filters
+netaddr
+passlib
+# for common modules
+pywinrm
+requests
