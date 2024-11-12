@@ -1,18 +1,13 @@
-- name: Install psmisc
+- name: Install packages
   ansible.builtin.package:
-    name: psmisc
-    state: present
-
-- name: Install pip
-  ansible.builtin.package:
-    name: python3-pip
-    state: present
-
-- name: Install docker module
-  ansible.builtin.pip:
     name:
-      - docker
-      - docker-compose
+      - ansible-core
+      - psmisc
+      - python3.12-devel
+      - python3.12-pip
+      - python3.12-pip-wheel
+      - tar
+      - zip
     state: present
 
 - name: Create semaphore user
@@ -20,7 +15,6 @@
     name: semaphore
     comment: SemaphoreUI
     uid: 1001
-    group: docker
     generate_ssh_key: true
     ssh_key_type: ed25519
     ssh_key_passphrase: "{{ ssh_passphrase }}"
@@ -32,55 +26,114 @@
     src: /home/semaphore/.ssh/id_ed25519.pub
     dest: /home/semaphore/.ssh/authorized_keys
     owner: semaphore
-    group: docker
+    group: semaphore
     mode: '0600'
+
+- name: Get Semaphore Release info from Github
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/semaphoreui/semaphore/releases/latest
+    return_content: true
+    body_format: json
+  register: semaphore_release
+
+- name: Install Semaphore binary
+  block:
+    - name: Download semaphore
+      ansible.builtin.get_url:
+        url: https://github.com/semaphoreui/semaphore/releases/download/{{ semaphore_release.json.name }}/semaphore_{{ semaphore_release.json.name[1:] }}_linux_amd64.tar.gz
+        dest: /tmp/semaphore.tar.gz
+        mode: '0755'
+
+    - name: Extract semaphore
+      ansible.builtin.unarchive:
+        src: /tmp/semaphore.tar.gz
+        dest: /tmp
+        mode: '0755'
+        remote_src: true
+
+    - name: Copy semaphore to /usr/bin/
+      ansible.builtin.copy:
+        src: /tmp/semaphore
+        dest: /usr/bin/semaphore
+        owner: root
+        group: semaphore
+        mode: '0755'
+        remote_src: true
+  always:
+    - name: Remove files
+      ansible.builtin.file:
+        path: "/tmp/{{ item }}"
+        state: absent
+      loop:
+        - semaphore
+        - semaphore.tag.gz
 
 - name: Create config directory
   ansible.builtin.file:
-    path: /home/semaphore/config
+    path: /etc/semaphore/
     state: directory
     owner: semaphore
-    group: docker
+    group: semaphore
     mode: '0750'
 
-- name: Copy requirements.txt
+- name: Copy requirements
   ansible.builtin.copy:
-    src: requirements.txt
-    dest: /home/semaphore/config/
+    src: "{{ item }}"
+    dest: /home/semaphore/
     owner: semaphore
-    group: docker
+    group: semaphore
     mode: '0640'
+  loop:
+    - requirements.txt
+    - requirements.yml
 
-- name: Check if .env file exists
+- name: Install requirements for semaphore user
+  become: true
+  become_user: semaphore
+  ansible.builtin.pip:
+    requirements: '/home/semaphore/requirements.txt'
+    executable: /usr/bin/pip3.12
+    extra_args: '--user'
+    state: present
+
+- name: Install collections
+  become: true
+  become_user: semaphore
+  ansible.builtin.command:
+    cmd: ansible-galaxy collection install --upgrade -r /home/semaphore/requirements.yml
+
+- name: Check if env file exists
   ansible.builtin.stat:
-    path: /home/semaphore/.env
+    path: /etc/semaphore/env
   register: env_file
 
-- name: Deploy .env file if not exists
+- name: Deploy env file if not exists
   when: not env_file.stat.exists
   ansible.builtin.template:
     src: env.j2
-    dest: /home/semaphore/.env
+    dest: /etc/semaphore/.env
     owner: semaphore
-    group: docker
+    group: semaphore
     mode: '0640'
   notify: Restart semaphore
 
-- name: Deploy docker-compose.yml
+- name: Add Semaphore Config
   ansible.builtin.template:
-    src: docker-compose.yml.j2
-    dest: /home/semaphore/docker-compose.yml
-    owner: semaphore
-    group: docker
+    src: "{{ semaphore_config_path }}"
+    dest: "/etc/semaphore/config.json"
     mode: '0640'
-  notify: Restart semaphore
+    owner: semaphore
+    group: semaphore
+  become: true
+  notify:
+    - Restart semaphore
 
 - name: Create semaphore service
   ansible.builtin.template:
     src: semaphore.service.j2
     dest: /usr/lib/systemd/system/semaphore.service
     owner: root
-    group: root
+    group: semaphore
     mode: '0644'
   notify: Restart semaphore
 
