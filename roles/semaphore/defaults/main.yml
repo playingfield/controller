@@ -1,5 +1,6 @@
 ---
 desired_state: present
+semaphore_download_binary: true
 verify_state: true
 # Easier debugging
 debug: false

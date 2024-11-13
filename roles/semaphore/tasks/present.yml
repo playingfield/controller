@@ -29,18 +29,28 @@
     group: semaphore
     mode: '0600'
 
-- name: Get Semaphore Release info from Github
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/semaphoreui/semaphore/releases/latest
-    return_content: true
-    body_format: json
-  register: semaphore_release
+- name: Find Semaphore release
+  when: semaphore_download_url is not defined
+  block:
+
+    - name: Get Semaphore Release info from Github
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/semaphoreui/semaphore/releases/latest
+        return_content: true
+        body_format: json
+      register: _sem_rel
+
+    - name: Set semaphore_download_url
+      ansible.builtin.set_fact:
+        semaphore_download_url: "{{ semaphore_releases_url }}/{{ _sem_rel.json.name }}/semaphore_{{ _sem_rel.json.name[1:] }}_linux_amd64.tar.gz"
 
 - name: Install Semaphore binary
+  when: semaphore_download_binary | bool
   block:
+
     - name: Download semaphore
       ansible.builtin.get_url:
-        url: https://github.com/semaphoreui/semaphore/releases/download/{{ semaphore_release.json.name }}/semaphore_{{ semaphore_release.json.name[1:] }}_linux_amd64.tar.gz
+        url: "{{ semaphore_download_url }}"
         dest: /tmp/semaphore.tar.gz
         mode: '0755'
 
@@ -101,6 +111,7 @@
   become_user: semaphore
   ansible.builtin.command:
     cmd: ansible-galaxy collection install --upgrade -r /home/semaphore/requirements.yml
+  changed_when: true
 
 - name: Check if env file exists
   ansible.builtin.stat:

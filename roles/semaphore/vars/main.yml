@@ -1,4 +1,5 @@
 ---
+semaphore_releases_url: 'https://github.com/semaphoreui/semaphore/releases/download'
 semaphore_admin_password: "{{ vault_admin_password }}"
 semaphore_cookie_hash: "{{ vault_cookie_hash }}"
 semaphore_cookie_encryption: "{{ vault_cookie_encryption }}"
