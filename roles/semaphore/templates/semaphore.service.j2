@@ -3,10 +3,8 @@ Description=Semaphore UI
 Requires=network.target
 After=network.target syslog.target
 Documentation=https://github.com/semaphoreui/semaphore
-Documentation=man:semaphore --help
 
 [Service]
-EnvironmentFile=/etc/semaphore/env
 User=semaphore
 Group=semaphore
 ExecStart=/usr/bin/semaphore server --config /etc/semaphore/config.json

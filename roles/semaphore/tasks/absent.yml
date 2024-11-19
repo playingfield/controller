@@ -1,10 +1,29 @@
 ---
+- name: Gather service facts
+  ansible.builtin.service_facts:
+  no_log: "{{ not debug }}"
+
+- name: Stop semaphore service
+  when:
+    - ansible_facts.services['semaphore.service'] is defined
+    - ansible_facts.services['semaphore.service'].state == 'running'
+  ansible.builtin.systemd:
+    name: semaphore.service
+    state: stopped
+
 - name: Stop and disable semaphore service
+  when:
+    - ansible_facts.services['semaphore.service'] is defined
+    - ansible_facts.services['semaphore.service'].status == 'enabled'
   ansible.builtin.systemd:
     name: semaphore.service
     enabled: false
-    state: stopped
     daemon_reload: true
+
+- name: Remove systemd service file
+  ansible.builtin.file:
+    path: /usr/lib/systemd/system/semaphore.service
+    state: absent
 
 - name: Kill processes of semaphore user
   ansible.builtin.command:
@@ -13,37 +32,17 @@
   failed_when: killed.rc not in [0, 1]
   changed_when: killed.rc == 0
 
-- name: Check compose file
-  ansible.builtin.stat:
-    path: /home/semaphore/docker-compose.yml
-  register: compose_file
-
-- name: Remove docker-compose
-  when: compose_file.stat.exists | bool
-  community.docker.docker_compose_v2:
-    project_src: /home/semaphore
-    state: absent
-    remove_images: all
-    remove_volumes: true
-    remove_orphans: true
-
 - name: Remove config directory
   ansible.builtin.file:
-    path: "/home/semaphore/{{ item }}"
-    state: absent
-  loop:
-    - config
-    - .env
-    - docker-compose.yml
-
-- name: Remove docker modules
-  ansible.builtin.pip:
-    name:
-      - docker
-      - docker-compose
+    path: /etc/semaphore
     state: absent
 
 - name: Remove semaphore user
   ansible.builtin.user:
+    name: semaphore
+    state: absent
+
+- name: Remove semaphore package
+  ansible.builtin.package:
     name: semaphore
     state: absent

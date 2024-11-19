@@ -1,0 +1,3 @@
+---
+# shared with semaphore role
+semaphore_env: /home/semaphore/.env

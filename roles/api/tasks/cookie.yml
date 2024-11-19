@@ -1,14 +1,23 @@
+- name: Get admin user
+  ansible.builtin.shell: |
+    set -o pipefail;
+    grep SEMAPHORE_ADMIN= {{ semaphore_env }} | cut -d= -f2 | sed 's/"//g'
+  register: admin_user
+  changed_when: false
+  no_log: "{{ not debug }}"
+
 - name: Get admin password
   ansible.builtin.shell: |
     set -o pipefail;
-    grep SEMAPHORE_ADMIN_PASSWORD= /home/semaphore/.env | cut -d= -f2
+    grep SEMAPHORE_ADMIN_PASSWORD= {{ semaphore_env }} | cut -d= -f2
   register: admin_pass
   changed_when: false
   no_log: "{{ not debug }}"
 
 - name: Set facts
   ansible.builtin.set_fact:
-    semaphore_password: "{{ admin_pass.stdout[1:] }}="
+    semaphore_admin_user: "{{ admin_user.stdout }}"
+    semaphore_admin_password: "{{ admin_pass.stdout[1:] }}="
   no_log: "{{ not debug }}"
 
 - name: Set API token
@@ -16,8 +25,8 @@
     url: "{{ semaphore_api_url }}/auth/login"
     method: POST
     body:
-      auth: semaphore
-      password: "{{ semaphore_password }}"
+      auth: "{{ semaphore_admin_user }}"
+      password: "{{ semaphore_admin_password }}"
     status_code: 204
     timeout: 5
   register: login_response
