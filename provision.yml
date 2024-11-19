@@ -6,12 +6,13 @@
   hosts: database
   become: true
   gather_facts: true
-  tags: [postgres]
+  tags: [postgres, database]
 
   pre_tasks:
     - name: Lookup DB_PASS in environment variables
       ansible.builtin.set_fact:
         check_db_pass: "{{ lookup('env', 'DB_PASS') }}"
+      no_log: true
 
     - name: Assert that DB_PASS is defined
       ansible.builtin.assert:
@@ -24,7 +25,7 @@
   roles:
     - role: postgres
 
-- name: Semaphore in Docker
+- name: Semaphore in Systemd
   hosts: semaphore
   become: true
   gather_facts: true
@@ -63,4 +64,3 @@
     - role: api
       tags:
         - api
-        - semaphore

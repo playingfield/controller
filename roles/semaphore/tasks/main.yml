@@ -1,8 +1,5 @@
 # Main tasks entry point for the role
 
-- name: "State variables - {{ desired_state }}"
-  ansible.builtin.include_vars: "{{ desired_state }}.yml"
-
 - name: "Converge state - {{ desired_state }}"
   ansible.builtin.include_tasks: "{{ desired_state }}.yml"
 

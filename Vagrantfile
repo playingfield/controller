@@ -83,7 +83,7 @@ Vagrant.configure(2) do |config|
         "database" => ["controller"],
         "web" => ["controller"]
       }
-      ansible.verbose = "v"
+      ansible.verbose = "vv"
       ansible.limit = "all" # or only "nodes" group, etc.
     end
   end

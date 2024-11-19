@@ -10,6 +10,11 @@
       - zip
     state: present
 
+- name: Relax SELinux
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
 - name: Create semaphore user
   ansible.builtin.user:
     name: semaphore
@@ -31,6 +36,7 @@
 
 - name: Find Semaphore release
   when: semaphore_download_url is not defined
+  become: false
   block:
 
     - name: Get Semaphore Release info from Github
@@ -40,51 +46,58 @@
         body_format: json
       register: _sem_rel
 
+    - name: Set Semaphore requirements
+      ansible.builtin.set_fact:
+        semaphore_version: "{{ _sem_rel['json']['tag_name'][1:] }}"
+        semaphore_pkg_ext: "{{ (ansible_facts['os_family'] == 'RedHat') | ternary('rpm', 'deb') }}"
+        semaphore_pkg_arch: "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('amd64', 'arm64') }}"
+
     - name: Set semaphore_download_url
       ansible.builtin.set_fact:
-        semaphore_download_url: "{{ semaphore_releases_url }}/{{ _sem_rel.json.name }}/semaphore_{{ _sem_rel.json.name[1:] }}_linux_amd64.tar.gz"
+        semaphore_download_url: "{{ semaphore_releases_url }}/{{ _sem_rel.json.name }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_ext }}"
 
-- name: Install Semaphore binary
-  when: semaphore_download_binary | bool
+- name: Install Semaphore package
+  when: semaphore_download_package | bool
   block:
 
     - name: Download semaphore
+      become: false
       ansible.builtin.get_url:
         url: "{{ semaphore_download_url }}"
-        dest: /tmp/semaphore.tar.gz
-        mode: '0755'
+        dest: "/tmp/semaphore.{{ semaphore_pkg_ext }}"
+        mode: '0644'
 
-    - name: Extract semaphore
-      ansible.builtin.unarchive:
-        src: /tmp/semaphore.tar.gz
-        dest: /tmp
-        mode: '0755'
-        remote_src: true
+    - name: Ensure Semaphore installed
+      ansible.builtin.dnf:
+        name: "file:///tmp/semaphore.{{ semaphore_pkg_ext }}"
+        disable_gpg_check: true
+        state: present
+      when: ansible_facts['os_family'] == 'RedHat'
 
-    - name: Copy semaphore to /usr/bin/
-      ansible.builtin.copy:
-        src: /tmp/semaphore
-        dest: /usr/bin/semaphore
-        owner: root
-        group: semaphore
-        mode: '0755'
-        remote_src: true
+    - name: Ensure Semaphore installed
+      ansible.builtin.apt:
+        deb: "file:///tmp/semaphore.{{ semaphore_pkg_ext }}"
+        allow_unauthenticated: true
+        state: present
+      when:
+        - ansible_facts['os_family'] == 'Debian'
+
   always:
-    - name: Remove files
+    - name: Remove package from /tmp
       ansible.builtin.file:
-        path: "/tmp/{{ item }}"
+        path: "/tmp/semaphore.{{ semaphore_pkg_ext }}"
         state: absent
-      loop:
-        - semaphore
-        - semaphore.tag.gz
 
-- name: Create config directory
+- name: Create directories
   ansible.builtin.file:
-    path: /etc/semaphore/
+    path: "{{ item }}"
     state: directory
     owner: semaphore
     group: semaphore
     mode: '0750'
+  loop:
+    - "{{ semaphore_config_dir }}"
+    - /home/semaphore/tmp
 
 - name: Copy requirements
   ansible.builtin.copy:
@@ -110,34 +123,46 @@
   become: true
   become_user: semaphore
   ansible.builtin.command:
-    cmd: ansible-galaxy collection install --upgrade -r /home/semaphore/requirements.yml
+    cmd: ansible-galaxy collection install -r /home/semaphore/requirements.yml
   changed_when: true
 
-- name: Check if env file exists
-  ansible.builtin.stat:
-    path: /etc/semaphore/env
-  register: env_file
-
-- name: Deploy env file if not exists
-  when: not env_file.stat.exists
-  ansible.builtin.template:
-    src: env.j2
-    dest: /etc/semaphore/.env
-    owner: semaphore
-    group: semaphore
-    mode: '0640'
-  notify: Restart semaphore
-
-- name: Add Semaphore Config
+- name: Deploy Semaphore Config
+  become: true
   ansible.builtin.template:
     src: "{{ semaphore_config_path }}"
-    dest: "/etc/semaphore/config.json"
-    mode: '0640'
+    dest: "{{ semaphore_config_dir }}/config.json"
+    mode: '0660'
     owner: semaphore
     group: semaphore
-  become: true
   notify:
     - Restart semaphore
+
+- name: Create semaphoreui SELinux policy
+  when: piet is defined
+  block:
+    - name: Copy policy files
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /tmp/
+        mode: '0644'
+      loop:
+        - semaphoreui.pp
+        - semaphoreui.te
+
+    - name: Install SELinux policy
+      ansible.builtin.command:
+        chdir: /tmp
+        cmd: semodule -i semaphoreui.pp
+      changed_when: false
+  always:
+    - name: Remove files
+      ansible.builtin.file:
+        path: "/tmp/{{ item }}"
+        state: absent
+      loop:
+        - semaphoreui.pp
+        - semaphoreui.te
+
 
 - name: Create semaphore service
   ansible.builtin.template:
@@ -154,3 +179,47 @@
     enabled: true
     daemon_reload: true
   notify: Restart semaphore
+
+- name: Manage local admin account
+  when: semaphore_admin_user_manage
+  block:
+
+    - name: Check if Semaphore local admin account exists
+      ansible.builtin.command: >
+        /usr/bin/semaphore user list
+        --config /etc/semaphore/config.json
+      changed_when: false  # Only lists existing users
+      register: semaphore_users
+
+    - name: Create Semaphore local admin account
+      ansible.builtin.command: >
+        /usr/bin/semaphore user add
+        --config /etc/semaphore/config.json
+        --login {{ semaphore_admin_user }}
+        --name {{ semaphore_admin_user }}
+        --password {{ semaphore_admin_password }}
+        --email {{ semaphore_admin_email }}
+        --admin
+      changed_when: true  # This always changes, this CLI basically resets the password
+      when: semaphore_admin_user not in semaphore_users['stdout']
+      no_log: "{{ not debug }}"
+
+    - name: Update Semaphore local admin account
+      ansible.builtin.command: >
+        /usr/bin/semaphore user change-by-login
+        --config /etc/semaphore/config.json
+        --login {{ semaphore_admin_user }}
+        --password {{ semaphore_admin_password }}
+        --email {{ semaphore_admin_email }}
+        --admin
+      changed_when: true  # This always changes, this CLI basically resets the password
+      when: semaphore_admin_user in semaphore_users['stdout']
+      no_log: "{{ not debug }}"
+
+    - name: Deploy .env file
+      ansible.builtin.template:
+        src: env.j2
+        dest: "{{ semaphore_env }}"
+        owner: semaphore
+        group: semaphore
+        mode: '0600'

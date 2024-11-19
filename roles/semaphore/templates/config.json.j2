@@ -1,80 +1,16 @@
 {
-        "mysql": {
-                "host": "",
-                "user": "",
-                "pass": "",
-                "name": "",
-                "options": {}
-        },
-        "bolt": {
-                "host": "",
-                "user": "",
-                "pass": "",
-                "name": "",
-                "options": {}
-        },
-        "postgres": {
-                "host": "",
-                "user": "",
-                "pass": "",
-                "name": "",
-                "options": {}
-        },
-        "dialect": "postgres",
-        "port": "3000",
-        "interface": "",
-        "tmp_path": "/tmp/semaphore",
-        "ssh_config_path": "",
-        "git_client": "cmd_git",
-        "web_host": "",
-        "cookie_hash": "{{ semaphore_cookie_hash }}",
-        "cookie_encryption": "{{ semaphore_cookie_encryption }}",
-        "access_key_encryption": "{{ semaphore_access_key_encryption }}",
-        "email_alert": false,
-        "email_sender": "",
-        "email_host": "",
-        "email_port": "",
-        "email_username": "",
-        "email_password": "",
-        "email_secure": false,
-        "ldap_enable": false,
-        "ldap_binddn": "",
-        "ldap_bindpassword": "",
-        "ldap_server": "",
-        "ldap_searchdn": "",
-        "ldap_searchfilter": "",
-        "ldap_mappings": {
-                "dn": "",
-                "mail": "",
-                "uid": "",
-                "cn": ""
-        },
-        "ldap_needtls": false,
-        "telegram_alert": false,
-        "telegram_chat": "",
-        "telegram_token": "",
-        "slack_alert": false,
-        "slack_url": "",
-        "rocketchat_alert": false,
-        "rocketchat_url": "",
-        "microsoft_teams_alert": false,
-        "microsoft_teams_url": "",
-        "oidc_providers": null,
-        "max_task_duration_sec": 0,
-        "max_tasks_per_template": 0,
-        "max_parallel_tasks": 0,
-        "runner_registration_token": "",
-        "password_login_disable": false,
-        "non_admin_can_create_project": false,
-        "use_remote_runner": false,
-        "runner": {
-                "api_url": "",
-                "registration_token": "",
-                "config_file": "",
-                "one_off": false,
-                "webhook": "",
-                "max_parallel_tasks": 0
-        },
-        "global_integration_alias": "",
-        "apps": null
+  "postgres": {
+     "host": "{{ semaphore_db_host }}:5432",
+     "user": "semaphore",
+     "pass": "{{ lookup('env', 'DB_PASS') }}",
+     "name": "semaphore",
+     "options": {
+       "sslmode": "require"
+     }
+  },
+  "dialect": "postgres",
+  "tmp_path": "/home/semaphore/tmp",
+  "cookie_hash": "{{ semaphore_cookie_hash }}",
+  "cookie_encryption": "{{ semaphore_cookie_encryption }}",
+  "access_key_encryption": "{{ semaphore_access_key_encryption }}"
  }
