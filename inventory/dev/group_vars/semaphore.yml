@@ -6,8 +6,7 @@ nginx_add_repo: false
 ssh_passphrase: "SomethingYouNeedToUse"
 
 use_docker: true
-use_podman: false
 use_opentofu: true
-use_powershell: false
-use_terraform: false
+use_powershell: true
+use_terraform: true
 terraform_ver: 1.9.8
