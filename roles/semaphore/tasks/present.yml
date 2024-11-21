@@ -99,7 +99,7 @@
     - "{{ semaphore_config_dir }}"
     - /home/semaphore/tmp
 
-- name: Copy requirements
+- name: Copy requirements for ExecStartPre
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: /home/semaphore/
@@ -109,22 +109,6 @@
   loop:
     - requirements.txt
     - requirements.yml
-
-- name: Install requirements for semaphore user
-  become: true
-  become_user: semaphore
-  ansible.builtin.pip:
-    requirements: '/home/semaphore/requirements.txt'
-    executable: /usr/bin/pip3.12
-    extra_args: '--user'
-    state: present
-
-- name: Install collections
-  become: true
-  become_user: semaphore
-  ansible.builtin.command:
-    cmd: ansible-galaxy collection install -r /home/semaphore/requirements.yml
-  changed_when: true
 
 - name: Deploy Semaphore Config
   become: true
