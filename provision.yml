@@ -25,6 +25,18 @@
   roles:
     - role: postgres
 
+- name: Tools
+  hosts: semaphore
+  become: true
+  gather_facts: true
+  roles:
+    - role: andrewrothstein.opentofu
+      tags: [tools, opentofu]
+    - role: andrewrothstein.powershell
+      tags: [tools, powershell]
+    - role: andrewrothstein.terraform
+      tags: [tools, terraform]
+
 - name: Semaphore in Systemd
   hosts: semaphore
   become: true
