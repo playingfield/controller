@@ -1,5 +1,8 @@
 ---
 roles:
+  - src: andrewrothstein.opentofu
+  - src: andrewrothstein.powershell
+  - src: andrewrothstein.terraform
   - src: geerlingguy.docker
     name: docker
   - src: bbaassssiiee.postgres_ssl
