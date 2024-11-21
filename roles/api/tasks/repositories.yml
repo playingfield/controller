@@ -5,7 +5,7 @@
       changed_when: false
       check_mode: false
       ansible.builtin.uri:
-        url: "{{ semaphore_api_url }}/project/{{ semaphore_project_id }}/repositories"
+        url: "{{ semaphore_api_url }}/project/{{ semaphore_project_id }}/repositories?sort=name&order=asc"
         method: GET
         headers:
           Cookie: "{{ cookie }}"
@@ -21,16 +21,17 @@
         # project_id must be integer
         body: >-
           {
-            "project_id": {{ semaphore_project_id | int }},
             "name": "{{ controller_repository_name }}",
+            "project_id": {{ semaphore_project_id | int }},
             "git_url": "{{ controller_repository_git_url }}",
             "git_branch": "{{ controller_repository_git_branch }}",
+            "ssh_key_id": 0
           }
         body_format: json
         status_code: 204
       register: semaphore_repository_created
       when:
-        (semaphore_repositories.status == "404") or ("semaphore_repositories.json | selectattr('name', 'equalto', controller_repository_name) | length == 0")
+        (semaphore_repositories.json | length == 0) or ("semaphore_repositories.json | selectattr('name', 'equalto', controller_repository_name) | length == 0")
 
     - name: "Determine Repositories (after creation)"
       changed_when: false
