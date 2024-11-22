@@ -1,5 +1,12 @@
 ---
-# Use our own Yum repository with geerlingguy.docker
-# docker_add_repo: false
+semaphore_web_root: 'https://20.224.75.82'
+semaphore_db_host: '127.0.0.1'
 nginx_add_repo: false
-semaphore_web_root: 'https://controller'
+
+ssh_passphrase: "SomethingYouNeedToUse"
+
+use_docker: true
+use_opentofu: false
+use_powershell: true
+use_terraform: true
+terraform_ver: 1.8.2
