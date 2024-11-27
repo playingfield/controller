@@ -23,8 +23,8 @@ StandardError=journal
 SyslogIdentifier=semaphore
 
 ExecStartPre=/bin/bash -c 'pip3.12 install --upgrade --user -r /home/semaphore/requirements.txt'
-ExecStartPre=/bin/bash -c 'ansible-galaxy collection install --upgrade -r /home/semaphore/collections.yml'
-ExecStartPre=/bin/bash -c 'ansible-galaxy install -r /home/semaphore/requirements.yml'
+ExecStartPre=/bin/bash -c 'ansible-galaxy collection install -p /home/semaphore/tmp/.ansible/collections -r /home/semaphore/collections.yml'
+ExecStartPre=/bin/bash -c 'ansible-galaxy install -p /home/semaphore/tmp/.ansible/roles/ -r /home/semaphore/requirements.yml'
 
 [Install]
 WantedBy=multi-user.target
