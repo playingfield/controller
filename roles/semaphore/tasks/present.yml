@@ -109,6 +109,7 @@
   loop:
     - requirements.txt
     - requirements.yml
+    - collections.yml
 
 - name: Deploy Semaphore Config
   become: true
