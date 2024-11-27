@@ -2,4 +2,3 @@
 docker_install_compose: true
 docker_install_compose_plugin: true
 server_name: acsNode
-ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"

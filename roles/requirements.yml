@@ -9,4 +9,4 @@ roles:
     version: 1.0.0
   - src: bbaassssiiee.nginx_ssl
     name: nginx
-    version: 1.0.0
+    version: 1.0.1

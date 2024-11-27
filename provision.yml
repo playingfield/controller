@@ -10,17 +10,20 @@
 
   pre_tasks:
     - name: Lookup DB_PASS in environment variables
+      when: desired_state is not defined or desired_state == 'absent'
       ansible.builtin.set_fact:
         check_db_pass: "{{ lookup('env', 'DB_PASS') }}"
       no_log: true
 
     - name: Assert that DB_PASS is defined
+      when: desired_state is not defined or desired_state == 'absent'
       ansible.builtin.assert:
         that:
           - check_db_pass | length > 8
         msg: |
           run this shell command before this playbook:
-          export DB_PASS=aVeryStrongDatabasePassword
+          read -sp "Enter database password: " DB_PASS && export DB_PASS ; echo
+      no_log: true
 
   roles:
     - role: postgres
@@ -30,6 +33,7 @@
   become: true
   gather_facts: true
   tags: [tools]
+
   tasks:
     - name: Install Docker
       when: use_docker | bool
@@ -51,14 +55,6 @@
       ansible.builtin.include_role:
         name: andrewrothstein.terraform
 
-- name: Semaphore in Systemd
-  hosts: semaphore
-  become: true
-  gather_facts: true
-  roles:
-    - role: semaphore
-      tags: [semaphore]
-
 - name: Reverse Proxy
   hosts: web
   become: true
@@ -66,6 +62,30 @@
   roles:
     - role: nginx
       tags: [nginx]
+
+- name: Semaphore in Systemd
+  hosts: semaphore
+  become: true
+  gather_facts: true
+  tags: [semaphore]
+
+  pre_tasks:
+    - name: Lookup SSH_PASS in environment variables
+      ansible.builtin.set_fact:
+        ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
+      no_log: true
+
+    - name: Assert that SSH_PASS is defined
+      ansible.builtin.assert:
+        that:
+          - ssh_passphrase | length > 8
+        msg: |
+          run this shell command before this playbook:
+          read -sp "Enter ssh key passphrase: " SSH_PASS && export SSH_PASS ; echo
+      no_log: true
+
+  roles:
+    - role: semaphore
 
 - name: Configure Semaphore
   hosts: semaphore
