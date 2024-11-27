@@ -2,3 +2,4 @@
 docker_install_compose: true
 docker_install_compose_plugin: true
 server_name: "{{ lookup('env', 'HOSTNAME') }}"
+postgres_listen_addresses: '127.0.0.1'

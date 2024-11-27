@@ -6,7 +6,7 @@ verify_state: true
 debug: false
 semaphore_config_path: config.json.j2
 semaphore_port: 3000
-semaphore_db_host: "{{ ansible_default_ipv4.address }}"
+semaphore_db_host: "{{ postgres_listen_addresses }}"
 bind_port: 3000
 semaphore_service_uri: "https://{{ ansible_fqdn | default(ansible_hostname) }}"
 # Whether to create an admin user

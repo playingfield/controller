@@ -1,6 +1,5 @@
 ---
 semaphore_web_root: 'https://20.224.75.82'
-semaphore_db_host: '127.0.0.1'
 nginx_add_repo: false
 
 ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
