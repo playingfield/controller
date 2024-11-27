@@ -3,10 +3,9 @@ semaphore_web_root: 'https://controller'
 semaphore_db_host: '127.0.0.1'
 nginx_add_repo: false
 
-ssh_passphrase: "SomethingYouNeedToUse"
+ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
 
 use_docker: true
-use_podman: false
 use_opentofu: true
 use_powershell: false
 use_terraform: false

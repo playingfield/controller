@@ -15,6 +15,11 @@
     policy: targeted
     state: permissive
 
+- name: Assert that ssh_passphrase.length > 8
+  ansible.builtin.assert:
+    that: ssh_passphrase | length > 8
+    msg: "{{ ssh_passphrase }} needs to conform."
+
 - name: Create semaphore user
   ansible.builtin.user:
     name: semaphore
@@ -122,7 +127,7 @@
   notify:
     - Restart semaphore
 
-- name: Create semaphoreui SELinux policy
+- name: Create Semaphoreui SELinux policy
   when: piet is defined
   block:
     - name: Copy policy files
