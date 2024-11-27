@@ -1,11 +1,12 @@
 ---
 semaphore_web_root: 'https://controller'
 nginx_add_repo: false
+docker_add_repo: false
 
 ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
 
-use_docker: false
+use_docker: true
 use_opentofu: false
-use_powershell: false
+use_powershell: true
 use_terraform: true
 terraform_ver: 1.9.8
