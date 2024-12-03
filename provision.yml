@@ -54,14 +54,6 @@
       ansible.builtin.include_role:
         name: andrewrothstein.terraform
 
-- name: Reverse Proxy
-  hosts: web
-  become: true
-  gather_facts: true
-  roles:
-    - role: nginx
-      tags: [nginx]
-
 - name: Semaphore in Systemd
   hosts: semaphore
   become: true
@@ -108,3 +100,11 @@
     - role: api
       tags:
         - api
+
+- name: Reverse Proxy
+  hosts: web
+  become: true
+  gather_facts: true
+  roles:
+    - role: nginx
+      tags: [nginx]
