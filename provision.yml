@@ -23,7 +23,6 @@
         msg: |
           run this shell command before this playbook:
           read -sp "Enter database password: " DB_PASS && export DB_PASS ; echo
-      no_log: true
 
   roles:
     - role: postgres
@@ -82,7 +81,6 @@
         msg: |
           run this shell command before this playbook:
           read -sp "Enter ssh key passphrase: " SSH_PASS && export SSH_PASS ; echo
-      no_log: true
 
   roles:
     - role: semaphore
