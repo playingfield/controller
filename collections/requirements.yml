@@ -1,4 +1,8 @@
 ---
 collections:
-  - name: https://github.com/kubernetes-sigs/kubespray.git
-    type: git
+  - name: ansible.posix
+  - name: ansible.utils
+  - name: community.crypto
+  - name: community.docker
+  - name: community.general
+  - name: community.postgresql
