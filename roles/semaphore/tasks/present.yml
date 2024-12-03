@@ -116,6 +116,13 @@
     - requirements.yml
     - collections.yml
 
+- name: Create python3.12 venv
+  become_user: semaphore
+  ansible.builtin.command: /usr/bin/python3.12 -m venv venv --system-site-packages --upgrade-deps
+  args:
+    chdir: /home/semaphore
+    creates: /home/semaphore/venv
+
 - name: Deploy Semaphore Config
   become: true
   ansible.builtin.template:
