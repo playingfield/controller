@@ -43,6 +43,11 @@
     state: absent
     force: true
 
+- name: Remove home directory
+  ansible.builtin.file:
+    path: /home/semaphore
+    state: absent
+
 - name: Remove semaphore package
   ansible.builtin.package:
     name: semaphore

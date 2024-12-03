@@ -5,6 +5,3 @@ collections:
   - name: community.docker
   - name: community.general
   - name: community.postgresql
-  - name: kubernetes.core
-  - name: https://github.com/kubernetes-sigs/kubespray.git
-    type: git
