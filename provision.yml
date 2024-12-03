@@ -27,33 +27,6 @@
   roles:
     - role: postgres
 
-- name: Tools
-  hosts: semaphore
-  become: true
-  gather_facts: true
-  tags: [tools]
-
-  tasks:
-    - name: Install Docker
-      when: use_docker | bool
-      ansible.builtin.include_role:
-        name: geerlingguy.docker
-
-    - name: Install OpenTofu
-      when: use_opentofu | bool
-      ansible.builtin.include_role:
-        name: andrewrothstein.opentofu
-
-    - name: Install Powershell
-      when: use_powershell | bool
-      ansible.builtin.include_role:
-        name: andrewrothstein.powershell
-
-    - name: Install Terraform
-      when: use_terraform | bool
-      ansible.builtin.include_role:
-        name: andrewrothstein.terraform
-
 - name: Semaphore in Systemd
   hosts: semaphore
   become: true
@@ -76,6 +49,37 @@
 
   roles:
     - role: semaphore
+
+- name: Tools
+  hosts: semaphore
+  become: true
+  gather_facts: true
+  tags: [tools]
+
+  vars:
+    docker_users:
+      - semaphore
+
+  tasks:
+    - name: Install Docker
+      when: use_docker | bool
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Install OpenTofu
+      when: use_opentofu | bool
+      ansible.builtin.include_role:
+        name: andrewrothstein.opentofu
+
+    - name: Install Powershell
+      when: use_powershell | bool
+      ansible.builtin.include_role:
+        name: andrewrothstein.powershell
+
+    - name: Install Terraform
+      when: use_terraform | bool
+      ansible.builtin.include_role:
+        name: andrewrothstein.terraform
 
 - name: Configure Semaphore
   hosts: semaphore
