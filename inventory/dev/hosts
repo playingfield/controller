@@ -21,6 +21,9 @@ controller ansible_host=192.168.56.3
 cluster01 ansible_host=192.168.56.4
 cluster02 ansible_host=192.168.56.5
 cluster03 ansible_host=192.168.56.6
+worker10 ansible_host=192.168.56.10
+worker11 ansible_host=192.168.56.11
+worker12 ansible_host=192.168.56.12
 
 
 [dev:vars]

@@ -11,7 +11,7 @@ $Stage = ENV['STAGE'] || "dev"
 # Require JSON module
 require 'json'
 # Read JSON file with config details
-guests = JSON.parse(File.read(File.join(File.dirname(__FILE__), "inventory", $Stage + ".json")))
+guests = JSON.parse(File.read(File.join(File.dirname(__FILE__), "inventory", $Stage, $Stage + ".json")))
 # Local PATH_SRC for mounting
 $PathSrc = ENV['PATH_SRC'] || "."
 Vagrant.configure(2) do |config|
