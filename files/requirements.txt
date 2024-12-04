@@ -1,4 +1,7 @@
 ansible-core==2.16.4
+# for krew
+dcb == 0.1.2
+# for kubespray
 distlib
 docker
 # Needed for jinja2 json_query templating
