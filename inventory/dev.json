@@ -1,7 +1,7 @@
 [
     {
         "name": "cluster01",
-        "autostart": false,
+        "autostart": true,
         "cpus": 2,
         "distro": "AlmaLinux",
         "family": "RedHat",
@@ -15,7 +15,7 @@
     },
     {
       "name": "cluster02",
-      "autostart": false,
+      "autostart": true,
       "cpus": 2,
       "distro": "AlmaLinux",
       "family": "RedHat",
@@ -29,7 +29,7 @@
     },
     {
       "name": "cluster03",
-      "autostart": false,
+      "autostart": true,
       "cpus": 2,
       "distro": "AlmaLinux",
       "family": "RedHat",
