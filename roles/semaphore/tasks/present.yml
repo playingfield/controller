@@ -116,6 +116,7 @@
     - requirements.txt
     - requirements.yml
     - collections.yml
+  notify: Restart semaphore
 
 - name: Create python3.12 venv
   become_user: semaphore
@@ -123,6 +124,7 @@
   args:
     chdir: /home/semaphore
     creates: /home/semaphore/venv
+  notify: Restart semaphore
 
 - name: Deploy Semaphore Config
   become: true
@@ -132,8 +134,7 @@
     mode: '0660'
     owner: semaphore
     group: semaphore
-  notify:
-    - Restart semaphore
+  notify: Restart semaphore
 
 - name: Create Semaphoreui SELinux policy
   when: piet is defined
