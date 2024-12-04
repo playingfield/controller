@@ -33,6 +33,7 @@
   no_log: "{{ not debug }}"
 
 - name: Save Cookie
+  when: login_response.status == 204
   ansible.builtin.set_fact:
     cookie: "{{ login_response.cookies_string }}"
-  when: login_response.status == 204
+  no_log: "{{ not debug }}"

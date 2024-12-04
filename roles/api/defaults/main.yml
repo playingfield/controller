@@ -6,6 +6,8 @@ debug: false
 desired_state: present
 # Create an SSH key to download private repos from GitHub
 my_github_key: ~/.ssh/github_key
+inventory_key: ~/.vagrant.d/insecure_private_keys/vagrant.key.ed25519
+inventory_user: vagrant
 controller_repository_name: controller
 controller_repository_git_url: 'https://github.com/playingfield/controller'
 controller_repository_git_branch: main
