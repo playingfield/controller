@@ -1,6 +1,6 @@
 # Ansible Controller with SemaphoreUI
 
-This project provides a development environment for deploying an Ansible Controller with SemaphoreUI. In this setup, Semaphore runs within a Docker container, while other components, such as PostgreSQL and Nginx, run directly on the host system.
+This project automates the deployment of an Ansible Controller featuring a web-based interface through SemaphoreUI.
 
 ![screenshot of Semaphore](screenshot.png "SemaphoreUI")
 
@@ -15,7 +15,9 @@ This project provides a development environment for deploying an Ansible Control
 
 ## Overview
 
-This project automates the deployment of an Ansible Controller featuring a web-based interface through SemaphoreUI. Semaphore runs within a Docker container, while components like PostgreSQL and Nginx operate directly on the host system.
+This project provides a development environment for deploying an Ansible Controller with SemaphoreUI.
+In this production-like setup, Semaphore, PostgreSQL and Nginx, run directly on the host system.
+This setup can host Clusterlust - the project to create a Kubernetes cluster with Kubespray.
 
 ## Installation
 
@@ -30,7 +32,7 @@ Follow these steps to set up the environment:
 2. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/bbaassssiiee/controller.git
+   git clone https://github.com/playingfield/controller.git
    cd controller
    ```
 3. **Install Ansible in a Python virtualenv**:
@@ -61,19 +63,22 @@ Follow these steps to set up the environment:
    ```bash
    ./provision.yml --list-tags
 
-   playbook: ./provision.yml
+playbook: provision.yml
 
-   play #1 (database): Database Server	TAGS: []
-         TASK TAGS: [postgres]
+  play #1 (database): Database Server	TAGS: [database,postgres]
+      TASK TAGS: [database, postgres]
 
-   play #2 (semaphore): Semaphore in Docker	TAGS: []
-         TASK TAGS: [docker, semaphore]
+  play #2 (semaphore): Semaphore in Systemd	TAGS: [semaphore]
+      TASK TAGS: [semaphore]
 
-   play #3 (web): Reverse Proxy	TAGS: []
-         TASK TAGS: [nginx]
+  play #3 (semaphore): Tools	TAGS: [tools]
+      TASK TAGS: [tools]
 
-   play #4 (semaphore): Configure Semaphore	TAGS: []
-         TASK TAGS: [semaphore]
+  play #4 (semaphore): Configure Semaphore	TAGS: []
+      TASK TAGS: [api]
+
+  play #5 (web): Reverse Proxy	TAGS: []
+      TASK TAGS: [nginx]
    ```
 
 ## Configuration
@@ -89,30 +94,39 @@ Follow these steps to set up the environment:
 
 - **Software Environments**: This project contains three inventories, but can be run with inventories define in external repositories modeled after the examples.
 
-This is the 'local' configuration:
+This is the important part of the 'local' configuration:
 
 ```yaml
-ansible_connection: local
-ansible_host: localhost
-database:
-  postgres:
-    enabled: true
-    name: postgres
-    owner: postgres
-    password: '{{ lookup(''env'', ''DB_PASS'') }}'
-    username: postgres
-  semaphore:
-    enabled: true
-    name: semaphore
-    owner: semaphore
-    password: '{{ lookup(''env'', ''DB_PASS'') }}'
-    username: semaphore
-docker_install_compose: true
-docker_install_compose_plugin: true
-postgres_enabled: true
-semaphore_web_root: https://controller
-server_name: '{{ lookup(''env'', ''HOSTNAME'') }}'
-ssh_passphrase: '{{ lookup(''env'', ''SSH_PASS'') }}'
+controller:
+   ansible_connection: local
+   ansible_host: localhost
+   database:
+      postgres:
+         enabled: true
+         name: postgres
+         owner: postgres
+         password: '{{ lookup(''env'', ''DB_PASS'') }}'
+         username: postgres
+      semaphore:
+         enabled: true
+         name: semaphore
+         owner: semaphore
+         password: '{{ lookup(''env'', ''DB_PASS'') }}'
+         username: semaphore
+   docker_install_compose: true
+   docker_install_compose_plugin: true
+   nginx_add_repo: false
+   postgres_enabled: true
+   postgres_listen_addresses: 127.0.0.1
+   postgres_version: 15
+   semaphore_web_root: https://20.224.75.82
+   server_name: '{{ lookup(''env'', ''HOSTNAME'') }}'
+   ssh_passphrase: '{{ lookup(''env'', ''SSH_PASS'') }}'
+   terraform_ver: 1.8.2
+   use_docker: true
+   use_opentofu: false
+   use_powershell: true
+   use_terraform: true
 ```
 
 ## Usage
