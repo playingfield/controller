@@ -12,36 +12,17 @@ web
 
 [database]
 controller ansible_host=192.168.56.3
-[git]
-controller ansible_host=192.168.56.3
 [semaphore]
 controller ansible_host=192.168.56.3
 [web]
 controller ansible_host=192.168.56.3
 
-[infra:children]
-linux
-windows
+[infra]
+cluster01 ansible_host=192.168.56.4
+cluster02 ansible_host=192.168.56.5
+cluster03 ansible_host=192.168.56.6
+
 
 [dev:vars]
 ansible_user=vagrant
 ansible_private_key_file = ~/.vagrant.d/insecure_private_key
-
-[linux]
-almalinux8 ansible_host=192.168.56.8
-debian12 ansible_host=192.168.56.12
-kali ansible_host=192.168.56.13
-ubuntu22 ansible_host=192.168.56.22
-
-[windows]
-windows2022 ansible_host=192.168.56.222
-
-[windows:vars]
-ansible_user=vagrant
-ansible_password=vagrant
-ansible_connection=winrm
-ansible_winrm_scheme=https
-ansible_winrm_server_cert_validation=ignore
-ansible_port=5986
-ansible_become_method=runas
-ansible_become_user=system
