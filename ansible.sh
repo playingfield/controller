@@ -1,7 +1,7 @@
 #!/bin/bash
-# Just `source ./ansible.rc`
+# Just `source ./ansible.sh`
 deactivate
-rm -rf ~/.py3
+rm -rf ~/py3
 python3.12 -m venv ~/py3
 # shellcheck source=/dev/null
 source ~/py3/bin/activate
