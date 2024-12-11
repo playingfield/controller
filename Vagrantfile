@@ -9,9 +9,9 @@ Vagrant.require_version ">= 2.0.0"
 $DbPass = ENV['DB_PASS'] || "your_database_password"
 $SshPassphrase = ENV['SSH_PASSPHRASE'] || "KeyWillBeGeneratedWithAPassphrase"
 
-# Select the config file from the STAGE environment variable (dev or test)
+# Select the config file from the STAGE environment variable (dev or local)
 # VM Configs are loaded from json files.
-$Stage = ENV['STAGE'] || "vagrant"
+$Stage = ENV['STAGE'] || "dev"
 
 # Require JSON module
 require 'json'

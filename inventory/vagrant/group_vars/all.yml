@@ -1,6 +1,0 @@
----
-docker_install_compose: true
-docker_install_compose_plugin: true
-postgres_listen_addresses: '127.0.0.1'
-server_name: "{{ lookup('env', 'HOSTNAME') }}"
-ssh_passphrase: KeyWillBeGeneratedWithAPassphrase
