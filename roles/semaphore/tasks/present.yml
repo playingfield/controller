@@ -51,6 +51,7 @@
         return_content: true
         body_format: json
       register: _sem_rel
+      check_mode: false
 
     - name: Set Semaphore requirements
       ansible.builtin.set_fact:
