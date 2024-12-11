@@ -2,7 +2,7 @@
 semaphore_web_root: 'https://20.224.75.82'
 nginx_add_repo: false
 
-ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
+ssh_passphrase: "{{ lookup('env', 'SSH_PASS') | default('KeyWillBeGeneratedWithAPassphrase') }}"
 
 use_docker: true
 use_opentofu: false
