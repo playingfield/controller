@@ -20,6 +20,6 @@ fi
 # /etc/alternatives/pip3 will point to 3.6, ansible uses 3.12
 sudo pip3.12 install jmespath
 ansible --version
-(git clone https://github.com/playingfield/controller.git)
+(git clone https://github.com/playingfield/controller.git || /bin/true)
 cd controller && source ansible.sh && ./prepare.sh
-./provision.yml -v
+./provision.yml -v -e debug=true
