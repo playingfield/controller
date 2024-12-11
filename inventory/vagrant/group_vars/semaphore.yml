@@ -1,0 +1,10 @@
+---
+semaphore_web_root: 'https://20.224.75.82'
+nginx_add_repo: false
+
+
+use_docker: true
+use_opentofu: false
+use_powershell: true
+use_terraform: true
+terraform_ver: 1.8.2
