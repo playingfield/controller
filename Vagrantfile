@@ -5,9 +5,14 @@
 
 Vagrant.require_version ">= 2.0.0"
 
+# Define environment variables DB_PASS and SSH_PASSPHRASE for your security
+$DbPass = ENV['DB_PASS'] || "your_database_password"
+$SshPassphrase = ENV['SSH_PASSPHRASE'] || "KeyWillBeGeneratedWithAPassphrase"
+
 # Select the config file from the STAGE environment variable (dev or test)
 # VM Configs are loaded from json files.
-$Stage = ENV['STAGE'] || "dev"
+$Stage = ENV['STAGE'] || "vagrant"
+
 # Require JSON module
 require 'json'
 # Read JSON file with config details
@@ -77,6 +82,6 @@ Vagrant.configure(2) do |config|
       end
     end
   end
-  # install
-  config.vm.provision "shell", privileged: false, path: "controller.sh"
+  # install ansible+controller in the VM
+  config.vm.provision "shell", privileged: false, path: "controller.sh", env: {"DB_PASS"=>$DbPass, "SSH_PASS"=>$SshPassphrase}
 end
