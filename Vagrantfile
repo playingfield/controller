@@ -77,18 +77,6 @@ Vagrant.configure(2) do |config|
       end
     end
   end
-  config.vm.provision :ansible do |ansible|
-    ansible.compatibility_mode = "2.0"
-    ansible.playbook = "provision.yml"
-    ansible.inventory_path = "inventory/" + $Stage + "/hosts"
-    ansible.galaxy_role_file = "roles/requirements.yml"
-    ansible.galaxy_roles_path = "galaxy_roles"
-    ansible.groups = {
-      "semaphore" => ["controller"],
-      "database" => ["controller"],
-      "web" => ["controller"]
-    }
-    ansible.verbose = "vv"
-    ansible.limit = "controller" # or only "nodes" group, etc.
-  end
+  # install
+  config.vm.provision "shell", privileged: false, path: "controller.sh"
 end
