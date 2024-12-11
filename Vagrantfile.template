@@ -32,7 +32,7 @@ Vagrant.configure(2) do |config|
   # set no_share to false to enable file sharing
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
   config.vm.provider "hyperv" do |hyperv|
-    hyperv.cpus = 2
+    hyperv.cpus = 4
     hyperv.memory = 4096
     hyperv.vmname = "controller"
     hyperv.enable_virtualization_extensions = true
@@ -47,12 +47,12 @@ Vagrant.configure(2) do |config|
   config.vm.provider :vmware_desktop do |vmware|
     vmware.gui = false
     vmware.vmx['memsize'] = 4096
-    vmware.vmx['numvcpus'] = 2
+    vmware.vmx['numvcpus'] = 4
   end
   config.vm.provider :virtualbox do |virtualbox|
     virtualbox.customize ["modifyvm", :id,
         "--audio-driver", "none",
-        "--cpus", 2,
+        "--cpus", 4,
         "--memory", 4096,
   "--natnet1", "192.168.33.0/24",
         "--graphicscontroller", "VMSVGA",
