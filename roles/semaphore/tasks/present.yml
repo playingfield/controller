@@ -75,21 +75,25 @@
         mode: '0644'
       register: downloaded_semaphore
 
+    # This task will be skipped in check mode
     - name: Ensure Semaphore installed
       ansible.builtin.dnf:
         name: "file:///tmp/semaphore.{{ semaphore_pkg_ext }}"
         disable_gpg_check: true
         state: present
       when:
+        - not ansible_check_mode
         - downloaded_semaphore is success
         - ansible_facts['os_family'] == 'RedHat'
 
+    # This task will be skipped in check mode
     - name: Ensure Semaphore installed
       ansible.builtin.apt:
         deb: "file:///tmp/semaphore.{{ semaphore_pkg_ext }}"
         allow_unauthenticated: true
         state: present
       when:
+        - not ansible_check_mode
         - downloaded_semaphore is success
         - ansible_facts['os_family'] == 'Debian'
 
