@@ -1,8 +1,6 @@
 #!/bin/bash -eux
-export DB_PASS=your_database_password
-export SSH_PASSPHRASE=KeyWillBeGeneratedWithAPassphrase
-
-# When this is a RHEL8 variant
+# vagrant inventory, do not use for production
+# Runs on a RHEL8 VM
 if [ -e /etc/redhat-release ]; then
    major=$(tr -dc '0-9.' <  /etc/redhat-release | cut -d \. -f1)
    if ((major == 8))
@@ -22,7 +20,6 @@ fi
 # /etc/alternatives/pip3 will point to 3.6, ansible uses 3.12
 sudo pip3.12 install jmespath
 ansible --version
-(git clone https://github.com/playingfield/controller.git)
+(git clone https://github.com/playingfield/controller.git || /bin/true)
 cd controller && source ansible.sh && ./prepare.sh
-echo $DB_PASS $SSH_PASSPHRASE
-./provision.yml -i inventory/local/hosts -v
+./provision.yml -v -e debug=true
