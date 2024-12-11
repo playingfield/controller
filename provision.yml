@@ -10,13 +10,13 @@
 
   pre_tasks:
     - name: Lookup DB_PASS in environment variables
-      when: desired_state is not defined or desired_state == 'absent'
+      when: desired_state == 'present'
       ansible.builtin.set_fact:
         check_db_pass: "{{ lookup('env', 'DB_PASS') }}"
       no_log: true
 
     - name: Assert that DB_PASS is defined
-      when: desired_state is not defined or desired_state == 'absent'
+      when: desired_state == 'present'
       ansible.builtin.assert:
         that:
           - check_db_pass | length > 8
