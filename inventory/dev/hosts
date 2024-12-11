@@ -3,7 +3,6 @@ localhost connection=local
 
 [dev:children]
 control
-infra
 
 [control:children]
 database
@@ -11,21 +10,12 @@ semaphore
 web
 
 [database]
-controller ansible_host=192.168.56.3
+controller ansible_host=10.0.0.206
 [semaphore]
-controller ansible_host=192.168.56.3
+controller ansible_host=10.0.0.206
 [web]
-controller ansible_host=192.168.56.3
-
-[infra]
-cluster01 ansible_host=192.168.56.4
-cluster02 ansible_host=192.168.56.5
-cluster03 ansible_host=192.168.56.6
-worker10 ansible_host=192.168.56.10
-worker11 ansible_host=192.168.56.11
-worker12 ansible_host=192.168.56.12
-
+controller ansible_host=10.0.0.206
 
 [dev:vars]
 ansible_user=vagrant
-ansible_private_key_file = ~/.vagrant.d/insecure_private_key
+ansible_private_key_file = ~/.ssh/vagrant
