@@ -37,17 +37,38 @@ Vagrant.configure(2) do |config|
     config.vm.define guest['name'], autostart: guest['autostart'] do |srv|
       srv.vm.box = guest['box']
       srv.vm.hostname = guest['name']
+      # Hyper-V needs an _external_ network adapter, bound to a connected interface.
+      # srv.vm.network "public_network", type: "dhcp", bridge: "Wi-Fi"
+      # Better Hypervisors allow setting the IP
       srv.vm.network 'private_network', ip: guest['ip_addr']
-
       srv.vm.network :forwarded_port, host: guest['forwarded_port'], guest: guest['app_port']
 
       # set no_share to false to enable file sharing
       srv.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: guest['no_share']
+      srv.vm.provider "hyperv" do |hyperv|
+        hyperv.cpus = guest['cpu']
+        hyperv.memory = guest['memory']
+        hyperv.vmname = guest['name']
+        hyperv.enable_virtualization_extensions = true
+        hyperv.vm_integration_services = {
+          guest_service_interface: true,
+          heartbeat: true,
+          shutdown: true,
+          time_synchronization: true,
+        }
+        hyperv.linked_clone = true
+      end
+      srv.vm.provider :vmware_desktop do |vmware|
+        vmware.gui = guest['gui']
+        vmware.vmx['memsize'] = guest['memory']
+        vmware.vmx['numvcpus'] =  guest['cpus']
+      end
       srv.vm.provider :virtualbox do |virtualbox|
         virtualbox.customize ["modifyvm", :id,
            "--audio-driver", "none",
            "--cpus", guest['cpus'],
            "--memory", guest['memory'],
+	   "--natnet1", "192.168.33.0/24",
            "--graphicscontroller", "VMSVGA",
            "--vram", "64"
         ]
@@ -56,36 +77,18 @@ Vagrant.configure(2) do |config|
       end
     end
   end
-  config.vm.define 'controller' , autostart: true, primary: true do |controller|
-    controller.vm.box = "almalinux/8"
-    controller.vm.network "private_network", ip: "192.168.56.3"
-    controller.vm.network :forwarded_port, host: 3000, guest: 3000
-    controller.vm.hostname = "controller"
-    controller.vm.provider :virtualbox do |virtualbox|
-        virtualbox.customize ["modifyvm", :id,
-           "--name", "controller",
-           "--audio", "none",
-           "--graphicscontroller", "VMSVGA",
-           "--cpus", "8",
-           "--memory", 16384,
-           "--vram", "64",
-           "--cableconnected1", "on"
-        ]
-    end
-    controller.vm.provision :ansible do |ansible|
-      ansible.compatibility_mode = "2.0"
-      ansible.playbook = "provision.yml"
-      ansible.inventory_path = "inventory/" + $Stage + "/hosts"
-      ansible.galaxy_role_file = "roles/requirements.yml"
-      ansible.galaxy_roles_path = "galaxy_roles"
-      ansible.groups = {
-        "gitea" => ["controller"],
-        "semaphore" => ["controller"],
-        "database" => ["controller"],
-        "web" => ["controller"]
-      }
-      ansible.verbose = "vv"
-      ansible.limit = "all" # or only "nodes" group, etc.
-    end
+  config.vm.provision :ansible do |ansible|
+    ansible.compatibility_mode = "2.0"
+    ansible.playbook = "provision.yml"
+    ansible.inventory_path = "inventory/" + $Stage + "/hosts"
+    ansible.galaxy_role_file = "roles/requirements.yml"
+    ansible.galaxy_roles_path = "galaxy_roles"
+    ansible.groups = {
+      "semaphore" => ["controller"],
+      "database" => ["controller"],
+      "web" => ["controller"]
+    }
+    ansible.verbose = "vv"
+    ansible.limit = "controller" # or only "nodes" group, etc.
   end
 end
