@@ -208,6 +208,11 @@ build {
   sources = ["source.azure-arm.controller", "source.hyperv-iso.controller", "source.virtualbox-iso.controller", "source.vmware-iso.controller"]
 
   provisioner "shell" {
+    except               = ["azure-arm.controller"]
+    execute_command = "bash '{{ .Path }}'"
+    script          = "vagrant.sh"
+  }
+  provisioner "shell" {
     execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
     scripts         = ["controller.sh"]
   }
