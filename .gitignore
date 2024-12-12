@@ -2,3 +2,7 @@
 .vscode/
 galaxy_roles/*
 files/*
+*.iso
+*.box
+*.ova
+*.vdi

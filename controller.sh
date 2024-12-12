@@ -22,4 +22,11 @@ sudo pip3.12 install jmespath
 ansible --version
 (git clone https://github.com/playingfield/controller.git || /bin/true)
 cd controller && source ansible.sh && ./prepare.sh
+# export these variables!
+if [ -z "${DB_PASS}" ]; then
+    export DB_PASS="your_database_password"
+fi
+if [ -z "${SSH_PASS}" ]; then
+    export SSH_PASS="KeyWillBeGeneratedWithAPassphrase"
+fi
 ./provision.yml -v -e debug=true
