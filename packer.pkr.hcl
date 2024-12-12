@@ -22,7 +22,7 @@ packer {
       source  = "github.com/hashicorp/proxmox"
     }
     vmware = {
-      version = ">= 1.0.0"
+      version = ">= 1.0.7"
       source  = "github.com/hashicorp/vmware"
     }
     virtualbox = {
