@@ -157,14 +157,18 @@ source "vmware-iso" "controller" {
   http_directory      = "kickstart"
   iso_checksum        = "${var.iso_checksum}"
   iso_urls            = ["${var.iso_url1}", "${var.iso_url2}"]
-  output_directory    = "output-vmware-iso"
+  output_directory    = "output-images"
   shutdown_command    = "echo 'vagrant' | sudo -S /sbin/shutdown -h 0"
   ssh_password        = "vagrant"
-  ssh_username        = "root"
+  ssh_username        = "vagrant"
   ssh_wait_timeout    = "10000s"
   tools_upload_flavor = "linux"
   vm_name             = "controller"
   vmdk_name           = "controller"
+  vmx_data = {
+    "svga.autodetect"         = true
+    "usb_xhci.present"        = true
+  }
 }
 
 # https://developer.hashicorp.com/packer/plugins/builders/hyperv/iso
@@ -208,9 +212,14 @@ build {
   sources = ["source.azure-arm.controller", "source.hyperv-iso.controller", "source.virtualbox-iso.controller", "source.vmware-iso.controller"]
 
   provisioner "shell" {
-    except               = ["azure-arm.controller"]
+    except          = ["azure-arm.controller"]
     execute_command = "bash '{{ .Path }}'"
     script          = "vagrant.sh"
+  }
+  provisioner "shell" {
+    except          = ["azure-arm.controller"]
+    execute_command = "bash '{{ .Path }}'"
+    script          = "vmtools.sh"
   }
   provisioner "shell" {
     execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
