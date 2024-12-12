@@ -167,9 +167,45 @@ source "vmware-iso" "controller" {
   vmdk_name           = "controller"
 }
 
+# https://developer.hashicorp.com/packer/plugins/builders/hyperv/iso
+source "hyperv-iso" "controller" {
+  boot_command = [
+    "c<wait>",
+    "linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=AlmaLinux-8-10-x86_64-dvd ro ",
+    "inst.text ",
+    "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>",
+    "initrdefi /images/pxeboot/initrd.img<enter>",
+    "boot<enter><wait>"
+  ]
+  boot_wait            = "5s"
+  communicator         = "ssh"
+  cpus                 = 2
+  disk_size            = 65536
+  disk_block_size      = 1
+  enable_secure_boot   = true
+  enable_mac_spoofing  = true
+  secure_boot_template = "MicrosoftUEFICertificateAuthority"
+  generation           = 2
+  guest_additions_mode = "disable"
+  headless             = true
+  http_directory       = "kickstart"
+  keep_registered      = false
+  iso_checksum         = "${var.iso_checksum}"
+  iso_urls             = ["${var.iso_url1}", "${var.iso_url2}"]
+  mac_address          = "00c0ffeec0de"
+  memory               = 4096
+  shutdown_command     = "shutdown -P now"
+  shutdown_timeout     = "30m"
+  ssh_password         = "vagrant"
+  ssh_username         = "root"
+  ssh_wait_timeout     = "10000s"
+  switch_name          = "Wi-Fi"
+  vm_name              = "controller"
+  vlan_id              = ""
+}
 
 build {
-  sources = ["source.azure-arm.controller", "source.virtualbox-iso.controller", "source.vmware-iso.controller"]
+  sources = ["source.azure-arm.controller", "source.hyperv-iso.controller", "source.virtualbox-iso.controller", "source.vmware-iso.controller"]
 
   provisioner "shell" {
     execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
@@ -184,23 +220,22 @@ build {
   }
 
   post-processors {
-
     post-processor "vagrant" {
+      except               = ["azure-arm.controller"]
       keep_input_artifact  = true
       compression_level    = 9
-      only                 = ["vmware-iso", "virtualbox-iso", "hyperv-iso"]
-      output               = "packer/controller.box"
+      output               = "output-images/controller.x86_64.{{.Provider}}.box"
       vagrantfile_template = "Vagrantfile.template"
     }
     post-processor "shell-local" {
       keep_input_artifact = true
-      inline              = ["ovftool packer-vmware-ova/controller.vmx packer/controller.ova"]
+      inline              = ["ovftool output-images/controller.vmx output-images/controller.ova"]
       only                = ["vmware-ova"]
     }
     post-processor "vagrant-cloud" {
       access_token = "${var.cloud_token}"
       box_tag      = "ansiblebook/controller"
-      only         = ["vmware-iso", "virtualbox-iso"]
+      only         = ["vmware-iso", "virtualbox-iso", "hyperv-iso"]
       version      = "${local.version}"
     }
   }
