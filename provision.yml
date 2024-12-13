@@ -47,6 +47,9 @@
           run this shell command before this playbook:
           read -sp "Enter ssh key passphrase: " SSH_PASS && export SSH_PASS ; echo
 
+  roles:
+    - role: semaphore
+
 - name: Forward Proxy
   hosts: proxy
   become: true
