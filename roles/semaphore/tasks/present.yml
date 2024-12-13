@@ -1,15 +1,12 @@
 - name: Install packages
   ansible.builtin.package:
-    name:
-      - ansible-core
-      - psmisc
-      - python3.12-devel
-      - python3.12-pip
-      - python3.12-pip-wheel
-      - rsync
-      - tar
-      - zip
+    name: "{{ item }}"
     state: present
+  register: package_install
+  until: package_install is success
+  retries: 10
+  delay: 2
+  with_items: "{{ semaphore_dependencies }}"
 
 - name: Relax SELinux
   ansible.posix.selinux:
