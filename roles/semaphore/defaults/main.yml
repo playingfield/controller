@@ -1,6 +1,17 @@
 ---
 desired_state: present
 semaphore_download_package: true
+semaphore_dependencies:
+  - ansible-core
+  - python3.12-devel
+  - python3.12-pip
+  - python3.12-pip-wheel
+  - psmisc
+  - rsync
+  - screen
+  - tar
+  - zip
+
 verify_state: true
 # Easier debugging
 debug: false
