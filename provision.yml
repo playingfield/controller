@@ -52,7 +52,7 @@
   become: true
   gather_facts: true
   tags: [proxy]
-  roles:
+  tasks:
     - name: Install Docker
       when: use_docker | bool
       ansible.builtin.include_role:
