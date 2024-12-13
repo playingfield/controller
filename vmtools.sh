@@ -2,10 +2,10 @@
 
 # set a default HOME_DIR environment variable if not set
 HOME_DIR=/root
-
+echo "$PACKER_BUILDER_TYPE"
 case "$PACKER_BUILDER_TYPE" in
 
-    virtualbox-iso|virtualbox-ovf)
+    virtualbox-iso)
     yum install -y bzip2 tar gcc make perl cpp libstdc++-devel kernel-devel kernel-headers
 
     mkdir -p /tmp/vbox /run/vboxadd
