@@ -47,8 +47,21 @@
           run this shell command before this playbook:
           read -sp "Enter ssh key passphrase: " SSH_PASS && export SSH_PASS ; echo
 
+- name: Forward Proxy
+  hosts: proxy
+  become: true
+  gather_facts: true
+  tags: [proxy]
   roles:
-    - role: semaphore
+    - name: Install Docker
+      when: use_docker | bool
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Install Squid proxy
+      ansible.builtin.import_role:
+        name: proxy
+      tags: [proxy]
 
 - name: Tools
   hosts: semaphore
@@ -61,11 +74,6 @@
       - semaphore
 
   tasks:
-    - name: Install Docker
-      when: use_docker | bool
-      ansible.builtin.include_role:
-        name: geerlingguy.docker
-
     - name: Install OpenTofu
       when: use_opentofu | bool
       ansible.builtin.include_role:

@@ -10,3 +10,6 @@ roles:
   - src: bbaassssiiee.nginx_ssl
     name: nginx
     version: 1.0.5
+  - src: bbaassssiiee.proxy
+    name: proxy
+    version: 1.0.3
