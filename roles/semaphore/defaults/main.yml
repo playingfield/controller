@@ -8,7 +8,6 @@ semaphore_dependencies:
   - python3.12-pip-wheel
   - psmisc
   - rsync
-  - screen
   - tar
   - zip
 
