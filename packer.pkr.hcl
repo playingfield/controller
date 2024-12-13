@@ -130,7 +130,7 @@ source "azure-arm" "controller" {
 }
 
 source "virtualbox-iso" "controller" {
-  boot_command            = ["<tab> append initrd=initrd.img inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg noipv6<enter><wait>"]
+  boot_command            = ["<up><tab> append initrd=initrd.img inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg noipv6<enter><wait>"]
   cpus                    = 4
   guest_additions_mode    = "upload"
   guest_additions_path    = "VBoxGuestAdditions.iso"
