@@ -148,8 +148,17 @@ source "virtualbox-iso" "controller" {
   vm_name                 = "controller"
 }
 
+# WIP: Unable to mount root fs on unknown-block(0,0)
 source "vmware-iso" "controller" {
-  boot_command        = ["<tab> append initrd=initrd.img inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg noipv6<enter><wait>"]
+  boot_command = [
+    "c<wait>",
+    "linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=AlmaLinux-8-10-x86_64-dvd ro ",
+    "inst.text ",
+    "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>",
+    "initrdefi /images/pxeboot/initrd.img<enter>",
+    "root=/dev/sda1<enter>",
+    "boot<enter><wait>"
+  ]
   boot_wait           = "10s"
   cpus                = 4
   guest_os_type       = "Centos-64"
@@ -166,6 +175,7 @@ source "vmware-iso" "controller" {
   vm_name             = "controller"
   vmdk_name           = "controller"
   vmx_data = {
+    "firmware" = "efi"
     "svga.autodetect"         = true
     "usb_xhci.present"        = true
   }
@@ -197,7 +207,7 @@ source "hyperv-iso" "controller" {
   iso_checksum         = "${var.iso_checksum}"
   iso_urls             = ["${var.iso_url1}", "${var.iso_url2}"]
   mac_address          = "00c0ffeec0de"
-  memory               = 4096
+  memory               = 8192
   shutdown_command     = "shutdown -P now"
   shutdown_timeout     = "30m"
   ssh_password         = "vagrant"
