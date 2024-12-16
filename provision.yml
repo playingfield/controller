@@ -78,27 +78,44 @@
 
   tasks:
     - name: Install Helm
-      when: use_helm | bool
+      when:
+        - use_helm is defined
+        - use_helm | bool
       ansible.builtin.include_role:
         name: andrewrothstein.kubernetes_helm
 
     - name: Install Krew
-      when: use_krew | bool
+      when:
+        - use_krew is defined
+        - use_krew | bool
       ansible.builtin.include_role:
         name: andrewrothstein.krew
 
+    - name: Install kbcli
+      when:
+        - use_kbcli is defined
+        - use_kbcli | bool
+      ansible.builtin.include_role:
+        name: bbaassssiiee.kubeblocks
+
     - name: Install OpenTofu
-      when: use_opentofu | bool
+      when:
+        - use_opentofu is defined
+        - use_opentofu | bool
       ansible.builtin.include_role:
         name: andrewrothstein.opentofu
 
     - name: Install Powershell
-      when: use_powershell | bool
+      when:
+        - use_powershell is defined
+        - use_powershell | bool
       ansible.builtin.include_role:
         name: andrewrothstein.powershell
 
     - name: Install Terraform
-      when: use_terraform | bool
+      when:
+        - use_terraform is defined
+        - use_terraform | bool
       ansible.builtin.include_role:
         name: andrewrothstein.terraform
 
