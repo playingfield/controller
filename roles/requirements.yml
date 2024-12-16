@@ -1,5 +1,7 @@
 ---
 roles:
+  - src: andrewrothstein.kubernetes_helm
+    version: 3.0.17
   - src: andrewrothstein.krew
     version: v1.2.0
   - src: andrewrothstein.opentofu

@@ -77,6 +77,11 @@
       - semaphore
 
   tasks:
+    - name: Install Helm
+      when: use_helm | bool
+      ansible.builtin.include_role:
+        name: andrewrothstein.kubernetes_helm
+
     - name: Install Krew
       when: use_krew | bool
       ansible.builtin.include_role:
