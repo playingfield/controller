@@ -1,9 +1,15 @@
 ---
 roles:
+  - src: andrewrothstein.krew
+    version: v1.2.0
   - src: andrewrothstein.opentofu
+    version: 1.0.9
   - src: andrewrothstein.powershell
+    version: v1.2.2
   - src: andrewrothstein.terraform
+    version: v3.0.38
   - src: geerlingguy.docker
+    version: 7.4.3
   - src: bbaassssiiee.postgres_ssl
     name: postgres
     version: 1.1.0
