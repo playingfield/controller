@@ -1,6 +1,3 @@
-[local]
-localhost connection=local
-
 [dev:children]
 control
 
@@ -10,11 +7,11 @@ semaphore
 web
 
 [database]
-controller ansible_host=10.0.0.206
+controller ansible_host=192.168.178.60
 [semaphore]
-controller ansible_host=10.0.0.206
+controller ansible_host=192.168.178.60
 [web]
-controller ansible_host=10.0.0.206
+controller ansible_host=192.168.178.60
 
 [dev:vars]
 ansible_user=vagrant

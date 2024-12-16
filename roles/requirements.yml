@@ -11,11 +11,8 @@ roles:
   - src: geerlingguy.docker
     version: 7.4.3
   - src: bbaassssiiee.postgres_ssl
-    name: postgres
     version: 1.1.0
   - src: bbaassssiiee.nginx_ssl
-    name: nginx
     version: 1.0.5
   - src: bbaassssiiee.proxy
-    name: proxy
     version: 1.0.3
