@@ -5,7 +5,7 @@ dcb == 0.1.2
 # for kubespray
 distlib
 docker
-helm
+helm-python
 ipaddress
 jinja2==3.1.4
 # Needed for jinja2 json_query templating
