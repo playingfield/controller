@@ -19,30 +19,45 @@ This project provides a development environment for deploying an Ansible Control
 In this production-like setup, Semaphore, PostgreSQL and Nginx, run directly on the host system.
 This setup can host Clusterlust - the project to create a Kubernetes cluster with Kubespray.
 
-## Installation
+## Quick Start Windows/macOS/Ubuntu Laptop
 
-Follow these steps to set up the environment:
+### Follow these steps to set up the environment:
 
-1. **Prerequisites**:
+1. You will need a Hypervisor to create a virtual machine on your machine with **Vagrant** (discussed below).
+   - [VirtualBox](https://www.virtualbox.org/), available for Windows/macOS/Linux
+   - **Hyper-V** a Windows-only feature.
+   - [Vagrant](https://www.vagrantup.com/) available for Windows/macOS/Linux, download and install.
 
-   **Note**: The `inventory/local` configuration is suitable for direct deployment on systems like Ubuntu Jammy, Red Hat, AlmaLinux, or Rocky Linux (8). In this setup, Vagrant and VirtualBox are not required.
-   - [VirtualBox](https://www.virtualbox.org/), installed on your laptop.
-   - [Vagrant](https://www.vagrantup.com/) installed on your laptop.
+2. Create a sub-directory named `controller` on your machine.
+3. Copy the `Vagrantfile.template` from this repository to `Vagrantfile` in this directory.
+4.
+  - If on Windows start an Administrator Powershell and change directory to the directory controller.
+  - In on Mac start a terminal and change directory to the directory controller.
+5. Run `vagrant up` and take not of the IP address that is logged.
+6. Browse with https to the IP address. (NOTE: The certificate is self-signed at first.)
 
-2. **Clone the repository**:
+## Quick Start AlmaLinux controller host
+
+### Prerequisites**:
+
+   **Note**: The `inventory/local` configuration is suitable for direct deployment on systems like Red Hat, AlmaLinux, Rocky Linux (8), or Ubuntu Jammy. In this setup, Vagrant and VirtualBox are not required.
+
+### Follow these steps to set up the environment:
+
+1. **Clone the repository**:
 
    ```bash
    git clone https://github.com/playingfield/controller.git
    cd controller
    ```
-3. **Install Ansible in a Python virtualenv**:
+2. **Install Ansible in a Python virtualenv**:
 
    ```bash
     source ansible.sh
     ./prepare.sh
    ```
 
-4. **Define the variables in inventory/{{ name }}/group_vars**:
+3. **Define the variables in inventory/{{ name }}/group_vars**:
    For instance, when you use the `local` inventory on an Ubuntu 22.04 machine, change this file
    `inventory/local/group_vars/database.yml` from 15 to 14:
 
@@ -50,7 +65,7 @@ Follow these steps to set up the environment:
    postgres_version: 14
    ```
 
-5. **Define these secrets as environment variables**
+4. **Define these secrets as environment variables**
    Store them in a safe place afterwards:
 
    ```bash

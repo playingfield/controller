@@ -1,7 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# To use these virtual machines install Vagrant and VirtualBox.
-# vagrant up
+# To use these virtual machines install Vagrant and Hyper-V or VirtualBox.
 
 Vagrant.require_version ">= 2.0.0"
 Vagrant.configure(2) do |config|
@@ -21,19 +20,15 @@ Vagrant.configure(2) do |config|
 
   # use the standard vagrant ssh key
   config.ssh.insert_key = false
-
-  # Iterate through entries in JSON file
-
   config.vm.box = "ansiblebook/controller"
   config.vm.hostname = "controller"
   config.vm.network "public_network", type: "dhcp", bridge: "Wi-Fi"
-  config.vm.network :forwarded_port, host: 8443, guest: 443
 
   # set no_share to false to enable file sharing
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
   config.vm.provider "hyperv" do |hyperv|
     hyperv.cpus = 4
-    hyperv.memory = 4096
+    hyperv.memory = 8192
     hyperv.vmname = "controller"
     hyperv.enable_virtualization_extensions = true
     hyperv.vm_integration_services = {
@@ -44,17 +39,12 @@ Vagrant.configure(2) do |config|
     }
     hyperv.linked_clone = true
   end
-  config.vm.provider :vmware_desktop do |vmware|
-    vmware.gui = false
-    vmware.vmx['memsize'] = 4096
-    vmware.vmx['numvcpus'] = 4
-  end
   config.vm.provider :virtualbox do |virtualbox|
     virtualbox.customize ["modifyvm", :id,
         "--audio-driver", "none",
         "--cpus", 4,
-        "--memory", 4096,
-  "--natnet1", "192.168.33.0/24",
+        "--memory", 8192,
+        "--natnet1", "192.168.33.0/24",
         "--graphicscontroller", "VMSVGA",
         "--vram", "64"
     ]
