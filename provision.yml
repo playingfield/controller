@@ -25,7 +25,7 @@
           read -sp "Enter database password: " DB_PASS && export DB_PASS ; echo
 
   roles:
-    - role: postgres
+    - role: bbaassssiiee.postgres_ssl
 
 - name: Semaphore in Systemd
   hosts: semaphore
@@ -63,7 +63,7 @@
 
     - name: Install Squid proxy
       ansible.builtin.import_role:
-        name: proxy
+        name: bbaassssiiee.proxy
       tags: [proxy]
 
 - name: Tools
@@ -77,6 +77,11 @@
       - semaphore
 
   tasks:
+    - name: Install Krew
+      when: use_krew | bool
+      ansible.builtin.include_role:
+        name: andrewrothstein.krew
+
     - name: Install OpenTofu
       when: use_opentofu | bool
       ansible.builtin.include_role:
@@ -121,5 +126,5 @@
   become: true
   gather_facts: true
   roles:
-    - role: nginx
+    - role: bbaassssiiee.nginx_ssl
       tags: [nginx]

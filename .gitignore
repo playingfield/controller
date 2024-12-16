@@ -2,7 +2,9 @@
 .output-images/
 .vagrant/
 .vscode/
-galaxy_roles/*
+roles/andrewrothstein.*
+roles/bbaassssiiee.*
+roles/geerlingguy.*
 files/*
 *.iso
 *.box
