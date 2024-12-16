@@ -6,10 +6,10 @@ dcb == 0.1.2
 distlib
 docker
 ipaddress
-# Needed for kubernetes.core
-jsonpatch
 # Needed for jinja2 json_query templating
 jmespath==1.0.1
+# Needed for kubernetes.core
+jsonpatch
 # Needed for ansible.utils.validate module
 jsonschema==4.23.0
 # Needed for ansible.utils.ipaddr
