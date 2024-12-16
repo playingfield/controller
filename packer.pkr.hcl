@@ -224,12 +224,12 @@ build {
   provisioner "shell" {
     except          = ["azure-arm.controller"]
     execute_command = "bash '{{ .Path }}'"
-    script          = "vagrant.sh"
+    script          = "files/vagrant.sh"
   }
   provisioner "shell" {
     except          = ["azure-arm.controller"]
     execute_command = "bash '{{ .Path }}'"
-    script          = "vmtools.sh"
+    script          = "files/vmtools.sh"
   }
   provisioner "shell" {
     execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
@@ -243,6 +243,15 @@ build {
     only            = ["azure-arm"]
   }
 
+  provisioner "shell" {
+    execute_command = "bash '{{ .Path }}'"
+    script          = "files/cleanup.sh"
+  }
+
+  provisioner "shell" {
+    execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    scripts         = ["controller.sh"]
+  }
   post-processors {
     post-processor "vagrant" {
       except               = ["azure-arm.controller"]

@@ -73,7 +73,7 @@ Vagrant.configure(2) do |config|
            "--audio-driver", "none",
            "--cpus", guest['cpus'],
            "--memory", guest['memory'],
-	   "--natnet1", "192.168.33.0/24",
+	         "--natnet1", "192.168.33.0/24",
            "--graphicscontroller", "VMSVGA",
            "--vram", "64"
         ]
