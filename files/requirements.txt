@@ -5,13 +5,18 @@ dcb == 0.1.2
 # for kubespray
 distlib
 docker
+helm
 ipaddress
+jinja2==3.1.4
 # Needed for jinja2 json_query templating
 jmespath==1.0.1
 # Needed for kubernetes.core
 jsonpatch
 # Needed for ansible.utils.validate module
 jsonschema==4.23.0
+kubernetes
+kubernetes-validate==1.31.0
+MarkupSafe==2.1.5
 # Needed for ansible.utils.ipaddr
 netaddr==1.3.0
 # for common modules
