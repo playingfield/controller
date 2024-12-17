@@ -94,6 +94,21 @@ variable "iso_url2" {
   default = "https://almalinux.mirror.wearetriple.com/8/isos/x86_64/AlmaLinux-8.10-x86_64-dvd.iso"
 }
 
+variable "password" {
+  type    = string
+  default = "${env("PROXMOX_PASSWORD")}"
+}
+
+variable "proxmox_url" {
+  type    = string
+  default = "${env("PROXMOX_URL")}"
+}
+
+variable "username" {
+  type    = string
+  default = "${env("PROXMOX_USERNAME")}"
+}
+
 variable "vagrantcloud_token" {
   type    = string
   default = "${env("VAGRANT_CLOUD_TOKEN")}"
@@ -218,8 +233,45 @@ source "hyperv-iso" "controller" {
   vlan_id              = ""
 }
 
+source "proxmox-iso" "controller" {
+  boot_command = ["<up><tab> append initrd=initrd.img inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg noipv6<enter><wait>"]
+  boot_wait    = "10s"
+  boot_iso {
+    type = "scsi"
+    iso_file = "local:iso/AlmaLinux-8.10-x86_64-dvd.iso"
+    unmount = true
+    iso_checksum = "${var.iso_checksum}"
+  }
+  disks {
+    disk_size          = "5G"
+    storage_pool       = "local-lvm"
+    type               = "scsi"
+  }
+  efi_config {
+    efi_storage_pool   = "local-lvm"
+    efi_type           = "4m"
+    pre_enrolled_keys  = true
+  }
+  http_directory       = "kickstart"
+  insecure_skip_tls_verify = true
+  network_adapters {
+    bridge = "vmbr0"
+    model  = "virtio"
+  }
+  node                 = "controller"
+  password             = "${var.password}"
+  proxmox_url          = "${var.proxmox_url}"
+  ssh_password         = "packer"
+  ssh_timeout          = "15m"
+  ssh_username         = "root"
+  template_description = "controller, generated on ${timestamp()}"
+  template_name        = "controller"
+  username             = "${var.username}"
+}
+
+
 build {
-  sources = ["source.azure-arm.controller", "source.hyperv-iso.controller", "source.virtualbox-iso.controller", "source.vmware-iso.controller"]
+  sources = ["source.azure-arm.controller", "source.hyperv-iso.controller", "source.virtualbox-iso.controller", "source.vmware-iso.controller", "source.proxmox-iso.controller"]
 
   provisioner "shell" {
     except          = ["azure-arm.controller"]
