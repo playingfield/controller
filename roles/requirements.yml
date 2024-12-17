@@ -15,7 +15,7 @@ roles:
   - src: geerlingguy.docker
     version: 7.4.3
   - src: bbaassssiiee.kubeblocks
-    version: 1.0.0
+    version: 1.0.4
   - src: bbaassssiiee.nginx_ssl
     version: 1.0.5
   - src: bbaassssiiee.postgres_ssl
