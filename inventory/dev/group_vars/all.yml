@@ -5,6 +5,7 @@ docker_install_compose: true
 docker_install_compose_plugin: true
 
 use_helm: true
+use_k9s: true
 use_krew: true
 use_kbcli: true
 kubectl_ver: v1.29.3
