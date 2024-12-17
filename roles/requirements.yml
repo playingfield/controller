@@ -1,5 +1,7 @@
 ---
 roles:
+  - src: andrewrothstein.k9s
+    version: v2.1.13
   - src: andrewrothstein.krew
     version: v1.2.0
   - src: andrewrothstein.kubernetes_helm
