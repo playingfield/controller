@@ -236,6 +236,12 @@ source "hyperv-iso" "controller" {
 source "proxmox-iso" "controller" {
   boot_command = ["<up><tab> append initrd=initrd.img inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg noipv6<enter><wait>"]
   boot_wait    = "10s"
+  boot_iso {
+    type = "scsi"
+    iso_file = "local:iso/AlmaLinux-8.10-x86_64-dvd.iso"
+    unmount = true
+    iso_checksum = "${var.iso_checksum}"
+  }
   disks {
     disk_size          = "5G"
     storage_pool       = "local-lvm"
@@ -248,10 +254,6 @@ source "proxmox-iso" "controller" {
   }
   http_directory       = "kickstart"
   insecure_skip_tls_verify = true
-  iso_checksum         = "${var.iso_checksum}"
-  iso_url = "local:iso/AlmaLinux-8.10-x86_64-dvd.iso"
-  iso_storage_pool     = "local"
-  unmount_iso = true
   network_adapters {
     bridge = "vmbr0"
     model  = "virtio"
