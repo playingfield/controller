@@ -98,6 +98,13 @@
       ansible.builtin.include_role:
         name: bbaassssiiee.kubeblocks
 
+    - name: Install k9
+      when:
+        - use_k9s is defined
+        - use_k9s | bool
+      ansible.builtin.include_role:
+        name: andrewrothstein.k9s
+
     - name: Install OpenTofu
       when:
         - use_opentofu is defined
