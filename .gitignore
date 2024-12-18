@@ -7,6 +7,7 @@ roles/bbaassssiiee.*
 roles/geerlingguy.*
 files/*
 *.iso
+*.iso.lock
 *.box
 *.ova
 *.vdi
