@@ -7,11 +7,11 @@ semaphore
 web
 
 [database]
-controller ansible_host=192.168.178.60
+controller ansible_host=10.0.0.206
 [semaphore]
-controller ansible_host=192.168.178.60
+controller ansible_host=10.0.0.206
 [web]
-controller ansible_host=192.168.178.60
+controller ansible_host=10.0.0.206
 
 [dev:vars]
 ansible_user=vagrant
