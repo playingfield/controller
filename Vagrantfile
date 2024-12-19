@@ -26,9 +26,9 @@ Vagrant.configure(2) do |config|
   # wait a while longer
   config.vm.boot_timeout = 1200
 
-  # disable update guest additions
+  # update guest additions if needed
   if Vagrant.has_plugin?("vagrant-vbguest")
-    config.vbguest.auto_update = false
+    config.vbguest.auto_update = true
   end
 
   # enable ssh agent forwarding
@@ -46,7 +46,7 @@ Vagrant.configure(2) do |config|
       # srv.vm.network "public_network", type: "dhcp", bridge: "Wi-Fi"
       # Better Hypervisors allow setting the IP
       srv.vm.network 'private_network', ip: guest['ip_addr']
-      srv.vm.network :forwarded_port, host: guest['forwarded_port'], guest: guest['app_port']
+      #srv.vm.network :forwarded_port, host: guest['forwarded_port'], guest: guest['app_port']
 
       # set no_share to false to enable file sharing
       srv.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: guest['no_share']
@@ -71,6 +71,7 @@ Vagrant.configure(2) do |config|
       srv.vm.provider :virtualbox do |virtualbox|
         virtualbox.customize ["modifyvm", :id,
            "--audio-driver", "none",
+           "--cableconnected1", "on",
            "--cpus", guest['cpus'],
            "--memory", guest['memory'],
 	         "--natnet1", "192.168.33.0/24",
