@@ -67,6 +67,8 @@ Vagrant.configure(2) do |config|
         vmware.gui = guest['gui']
         vmware.vmx['memsize'] = guest['memory']
         vmware.vmx['numvcpus'] =  guest['cpus']
+        vmware.vmx["ethernet0.pcislotnumber"] = "160"
+        vmware.vmx["ethernet1.pcislotnumber"] = "192"
       end
       srv.vm.provider :virtualbox do |virtualbox|
         virtualbox.customize ["modifyvm", :id,
