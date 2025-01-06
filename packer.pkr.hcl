@@ -33,22 +33,22 @@ packer {
 }
 
 variable "arm_client_id" {
-  type    = string
+  type        = string
   sensitive   = true
-  default = "${env("ARM_CLIENT_ID")}"
+  default     = "${env("ARM_CLIENT_ID")}"
   description = "The Active Directory service principal associated with your builder."
 }
 
 variable "arm_client_secret" {
-  type    = string
+  type        = string
   sensitive   = true
   description = "The password or secret for your service principal."
-  default = "${env("ARM_CLIENT_SECRET")}"
+  default     = "${env("ARM_CLIENT_SECRET")}"
 }
 
 variable "arm_location" {
-  type    = string
-  default = "${env("ARM_LOCATION")}"
+  type        = string
+  default     = "${env("ARM_LOCATION")}"
   description = "https://azure.microsoft.com/en-us/global-infrastructure/geographies/"
 }
 
@@ -68,8 +68,8 @@ variable "arm_subscription_id" {
 }
 
 variable "arm_tenant_id" {
-  type    = string
-  default = "${env("ARM_TENANT_ID")}"
+  type        = string
+  default     = "${env("ARM_TENANT_ID")}"
   description = "https://www.packer.io/docs/builders/azure/arm"
 }
 
@@ -124,8 +124,8 @@ source "azure-arm" "controller" {
   azure_tags = {
     product = "controller"
   }
-  client_id                         = "${var.arm_client_id}"
-  client_secret                     = "${var.arm_client_secret}"
+  client_id     = "${var.arm_client_id}"
+  client_secret = "${var.arm_client_secret}"
   plan_info {
     plan_name      = "8-gen2"
     plan_product   = "almalinux"
@@ -190,9 +190,9 @@ source "vmware-iso" "controller" {
   vm_name             = "controller"
   vmdk_name           = "controller"
   vmx_data = {
-    "firmware" = "efi"
-    "svga.autodetect"         = true
-    "usb_xhci.present"        = true
+    "firmware"         = "efi"
+    "svga.autodetect"  = true
+    "usb_xhci.present" = true
   }
 }
 
@@ -237,22 +237,22 @@ source "proxmox-iso" "controller" {
   boot_command = ["<up><tab> append initrd=initrd.img inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg noipv6<enter><wait>"]
   boot_wait    = "10s"
   boot_iso {
-    type = "scsi"
-    iso_file = "local:iso/AlmaLinux-8.10-x86_64-dvd.iso"
-    unmount = true
+    type         = "scsi"
+    iso_file     = "local:iso/AlmaLinux-8.10-x86_64-dvd.iso"
+    unmount      = true
     iso_checksum = "${var.iso_checksum}"
   }
   disks {
-    disk_size          = "5G"
-    storage_pool       = "local-lvm"
-    type               = "scsi"
+    disk_size    = "5G"
+    storage_pool = "local-lvm"
+    type         = "scsi"
   }
   efi_config {
-    efi_storage_pool   = "local-lvm"
-    efi_type           = "4m"
-    pre_enrolled_keys  = true
+    efi_storage_pool  = "local-lvm"
+    efi_type          = "4m"
+    pre_enrolled_keys = true
   }
-  http_directory       = "kickstart"
+  http_directory           = "kickstart"
   insecure_skip_tls_verify = true
   network_adapters {
     bridge = "vmbr0"
