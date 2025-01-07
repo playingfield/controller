@@ -21,9 +21,11 @@ This setup can host Clusterlust - the project to create a Kubernetes cluster wit
 
 ## Quick Start Windows/macOS/Ubuntu Laptop
 
+This will download a pre-built image for the virtual machine with all software installed.
+
 ### Follow these steps to set up the environment:
 
-1. You will need a Hypervisor to create a virtual machine on your machine with **Vagrant** (discussed below).
+1. You will need a Hypervisor to create a virtual machine. You can do that on your machine with **Vagrant** (discussed below), and one of:
    - [VirtualBox](https://www.virtualbox.org/), available for Windows/macOS/Linux
    - **Hyper-V** a Windows-only feature.
    - [Vagrant](https://www.vagrantup.com/) available for Windows/macOS/Linux, download and install.
@@ -36,7 +38,13 @@ This setup can host Clusterlust - the project to create a Kubernetes cluster wit
 5. Run `vagrant up` and take not of the IP address that is logged.
 6. Browse with https to the IP address. (NOTE: The certificate is self-signed at first.)
 
+## Creating the virtual machine from source with Vagrant
+`vagrant up` in the source directory builds the Virtual machine with ansible playbooks.
+[VMWare Workstation or VMWare Fusion](https://blogs.vmware.com/workstation/2024/05/vmware-workstation-pro-now-available-free-for-personal-use.html)
+
 ## Quick Start AlmaLinux controller host
+
+When you have a virtual machine with AlmaLinux 8, then you can just install the software.
 
 ### Prerequisites**:
 
