@@ -1,7 +1,9 @@
 ---
 # https://ansible-lint.readthedocs.io/en/latest/default_rules/
 exclude_paths:
-  - galaxy_roles/
+  - roles/andrewrothstein.*
+  - roles/bbaassssiiee.*
+  - roles/geerlingguy.*
   - .github/
 
 skip_list:

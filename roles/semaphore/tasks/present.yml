@@ -58,6 +58,7 @@
 
     - name: Set semaphore_download_url
       ansible.builtin.set_fact:
+        # yamllint disable-line rule:line-length
         semaphore_download_url: "{{ semaphore_releases_url }}/{{ _sem_rel.json.name }}/semaphore_{{ semaphore_version }}_linux_{{ semaphore_pkg_arch }}.{{ semaphore_pkg_ext }}"
 
 - name: Install Semaphore package
@@ -112,6 +113,7 @@
     - /home/semaphore/tmp
 
 - name: Create python3.12 venv
+  become: true
   become_user: semaphore
   ansible.builtin.command: /usr/bin/python3.12 -m venv venv --upgrade-deps
   args:
