@@ -1,7 +1,11 @@
 ---
-# Only restart when not running in itself
 - name: Restart semaphore
-  when: not lookup('env', 'SEMAPHORE')
   ansible.builtin.systemd:
     name: semaphore
     state: restarted
+
+- name: Requirements update
+  ansible.builtin.systemd:
+    name: requirements.service
+    daemon.reload: true
+    state: started

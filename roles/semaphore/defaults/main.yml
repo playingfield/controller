@@ -10,7 +10,8 @@ semaphore_dependencies:
   - rsync
   - tar
   - zip
-
+# timer to execute requirements-update
+requirements_timer: '*-*-* 20:30:40'
 verify_state: true
 # Easier debugging
 debug: false

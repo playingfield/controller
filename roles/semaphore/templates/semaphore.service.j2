@@ -21,17 +21,9 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=semaphore
 
-# to auto-upgrade python modules at service startup
-ExecStartPre=/bin/bash -c 'source /home/semaphore/venv/bin/activate \
-                           && pip install --upgrade -r /home/semaphore/requirements.txt'
-
-# to auto-upgrade ansible collections and roles at service startup
-ExecStartPre=/bin/bash -c 'source /home/semaphore/venv/bin/activate \
-                           && ansible-galaxy collection install -r /home/semaphore/requirements.yml \
-                           && ansible-galaxy role install -r /home/semaphore/requirements.yml'
-
-# REPLACE THE EXISTING 'ExecStart'
-ExecStart=/bin/bash -c 'source /home/semaphore/venv/bin/activate \
+ExecStart=/bin/bash -c 'rm -rf /home/semaphore/venv \
+                        && python3.12 -m venv /home/semaphore/venv \
+                        && source /home/semaphore/venv/bin/activate \
                         && /usr/bin/semaphore server --config /etc/semaphore/config.json'
 
 [Install]
