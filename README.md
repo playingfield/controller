@@ -70,7 +70,7 @@ This setup can host Clusterlust - the project to create a Kubernetes cluster wit
 
    ```bash
    export DB_PASS=your_database_password
-   export SSH_PASSPHRASE=KeyWillBeGeneratedWithAPassphrase
+   export SSH_PASS=KeyWillBeGeneratedWithAPassphrase
    ```
 
 5. **Run the playbook**:
