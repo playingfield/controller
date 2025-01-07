@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -e
 # vagrant inventory, do not use for production
 # Runs on a RHEL8 VM
 if [ -e /etc/redhat-release ]; then
