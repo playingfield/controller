@@ -34,8 +34,6 @@
         status_code: 204
         timeout: 5
       register: semaphore_repository_created
-#      when:
-#        (semaphore_repositories.json | length == 0) or ("semaphore_repositories.json | selectattr('name', 'equalto', controller_repository_name) | length == 0")
 
     - name: "Determine Repositories (after creation)"
       changed_when: false
