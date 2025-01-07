@@ -17,8 +17,8 @@ ExecReload=/bin/kill -s HUP $MAINPID
 Restart=always
 RestartSec=25s
 WorkingDirectory=/home/semaphore
-StandardOutput=journal
-StandardError=journal
+StandardOutput=syslog
+StandardError=syslog
 SyslogIdentifier=semaphore
 
 # to auto-upgrade python modules at service startup
