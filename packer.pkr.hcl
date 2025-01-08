@@ -126,11 +126,6 @@ source "azure-arm" "controller" {
   }
   client_id     = "${var.arm_client_id}"
   client_secret = "${var.arm_client_secret}"
-  plan_info {
-    plan_name      = "8-gen2"
-    plan_product   = "almalinux"
-    plan_publisher = "almalinux"
-  }
   image_offer                       = "almalinux"
   image_publisher                   = "almalinux"
   image_sku                         = "8-gen2"
