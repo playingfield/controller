@@ -171,15 +171,17 @@ source "vmware-iso" "controller" {
   ]
   boot_wait           = "10s"
   cpus                = 4
-  guest_os_type       = "Centos-64"
+  disk_size           = 65536
+  guest_os_type       = "rhel8_64Guest"
   headless            = false
   http_directory      = "kickstart"
   iso_checksum        = "${var.iso_checksum}"
   iso_urls            = ["${var.iso_url1}", "${var.iso_url2}"]
+  memory               = 8192
   output_directory    = "output-images"
-  shutdown_command    = "echo 'vagrant' | sudo -S /sbin/shutdown -h 0"
+  shutdown_command    = "shutdown -P now"
   ssh_password        = "vagrant"
-  ssh_username        = "vagrant"
+  ssh_username        = "root"
   ssh_wait_timeout    = "10000s"
   tools_upload_flavor = "linux"
   vm_name             = "controller"
