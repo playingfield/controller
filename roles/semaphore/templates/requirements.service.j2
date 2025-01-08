@@ -2,8 +2,11 @@
 Description=Semaphore Requirements Updater
 
 [Service]
+User=semaphore
+Group=semaphore
 # to auto-upgrade python venv with systemd timer
 ExecStart=/bin/bash -c 'source /home/semaphore/venv/bin/activate \
+                           && pip install --upgrade pip wheel setuptools \
                            && pip install --upgrade -r /home/semaphore/requirements.txt \
                            && ansible-galaxy collection install -r /home/semaphore/requirements.yml \
                            && ansible-galaxy role install -r /home/semaphore/requirements.yml'
