@@ -7,5 +7,5 @@
 - name: Requirements update
   ansible.builtin.systemd:
     name: requirements.service
-    daemon.reload: true
+    daemon_reload: true
     state: started
