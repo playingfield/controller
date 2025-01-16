@@ -28,7 +28,7 @@ if [ ! -d "$SCRIPT_DIR/.git" ]; then
     echo 'Running in Packer or Vagrant'
     (git clone https://github.com/playingfield/controller.git || /bin/true)
 fi
-cd controller && source ansible.sh && ./prepare.sh
+cd "$SCRIPT_DIR" && source ansible.sh && ./prepare.sh
 # export these variables!
 if [ -z "${DB_PASS}" ]; then
     export DB_PASS="your_database_password"
