@@ -17,4 +17,4 @@ controller ansible_host=10.0.0.206
 
 [dev:vars]
 ansible_user=vagrant
-ansible_private_key_file = ~/.ssh/vagrant
+;ansible_private_key_file = ~/.ssh/vagrant
