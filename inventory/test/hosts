@@ -8,8 +8,6 @@ web
 
 [database]
 controller ansible_host=10.0.0.206
-[git]
-controller ansible_host=10.0.0.206
 [semaphore]
 controller ansible_host=10.0.0.206
 [web]
