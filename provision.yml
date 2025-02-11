@@ -27,54 +27,12 @@
   roles:
     - role: bbaassssiiee.postgres_ssl
 
-- name: Semaphore in Systemd
-  hosts: semaphore
-  become: true
-  gather_facts: true
-  tags: [semaphore]
-
-  pre_tasks:
-    - name: Lookup SSH_PASS in environment variables
-      ansible.builtin.set_fact:
-        ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
-      no_log: true
-
-    - name: Assert that SSH_PASS is defined
-      ansible.builtin.assert:
-        that:
-          - ssh_passphrase | length > 8
-        msg: |
-          run this shell command before this playbook:
-          read -sp "Enter ssh key passphrase: " SSH_PASS && export SSH_PASS ; echo
-
-  roles:
-    - role: semaphore
-
-- name: Forward Proxy
-  hosts: proxy
-  become: true
-  gather_facts: true
-  tags: [proxy]
-  tasks:
-    - name: Install Docker
-      when: use_docker | bool
-      ansible.builtin.include_role:
-        name: geerlingguy.docker
-
-    - name: Install Squid proxy
-      ansible.builtin.import_role:
-        name: bbaassssiiee.proxy
-      tags: [proxy]
 
 - name: Tools
   hosts: semaphore
   become: true
   gather_facts: true
   tags: [tools]
-
-  vars:
-    docker_users:
-      - semaphore
 
   tasks:
     - name: Install Helm
@@ -126,6 +84,64 @@
       ansible.builtin.include_role:
         name: andrewrothstein.terraform
 
+- name: Reverse Proxy
+  hosts: web
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install nginx
+      ansible.builtin.include_role:
+        name: bbaassssiiee.nginx_ssl
+      tags: [nginx]
+
+- name: Forward Proxy
+  hosts: proxy
+  become: true
+  gather_facts: true
+  tags: [proxy]
+  vars:
+    docker_users:
+      - semaphore
+  tasks:
+    - name: Install Docker
+      when: use_docker | bool
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Install Squid proxy
+      ansible.builtin.include_role:
+        name: bbaassssiiee.proxy
+      tags: [proxy]
+
+- name: Semaphore in Systemd
+  hosts: semaphore
+  become: true
+  gather_facts: true
+  tags: [semaphore]
+
+  pre_tasks:
+    - name: Lookup SSH_PASS in environment variables
+      ansible.builtin.set_fact:
+        ssh_passphrase: "{{ lookup('env', 'SSH_PASS') }}"
+      no_log: true
+
+    - name: Assert that SSH_PASS is defined
+      ansible.builtin.assert:
+        that:
+          - ssh_passphrase | length > 8
+        msg: |
+          run this shell command before this playbook:
+          read -sp "Enter ssh key passphrase: " SSH_PASS && export SSH_PASS ; echo
+  tasks:
+    - name: Install Docker
+      when: use_docker | bool
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+    - name: Install Semaphore
+      ansible.builtin.include_role:
+        name: semaphore
+
 - name: Configure Semaphore
   hosts: semaphore
   become: true
@@ -145,15 +161,8 @@
       timeout: 5
 
   tasks:
-  roles:
-    - role: api
+    - name: Configure Semaphore
+      ansible.builtin.include_role:
+        name: api
       tags:
         - api
-
-- name: Reverse Proxy
-  hosts: web
-  become: true
-  gather_facts: true
-  roles:
-    - role: bbaassssiiee.nginx_ssl
-      tags: [nginx]
