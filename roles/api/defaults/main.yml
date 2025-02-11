@@ -1,6 +1,4 @@
 ---
-# TODO
-backup: false
 # Easier debugging
 debug: false
 desired_state: present
