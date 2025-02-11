@@ -3,7 +3,8 @@ docker_users:
   - "{{ ansible_user }}"
 docker_install_compose: true
 docker_install_compose_plugin: true
-
+vault_admin_user: admin
+vault_admin_password: '/nOKL/PaudDI1J80KB0pQYPGlvAoaMg8ea71MdvS2tI='
 use_helm: true
 use_k9s: true
 use_krew: true

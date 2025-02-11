@@ -13,7 +13,7 @@ controller ansible_host=10.0.0.206
 [web]
 controller ansible_host=10.0.0.206
 [proxy]
-controller ansible_host=10.0.0.206
+;controller ansible_host=10.0.0.206
 
 [dev:vars]
 ansible_user=vagrant

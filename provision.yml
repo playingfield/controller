@@ -146,6 +146,7 @@
   hosts: semaphore
   become: true
   gather_facts: true
+  tags: [api]
 
   vars:
     semaphore_api_url: "http://localhost:3000/api"
