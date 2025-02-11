@@ -1,5 +1,5 @@
 ---
-semaphore_web_root: 'https://20.224.75.82'
+semaphore_web_root: 'https://controller'
 nginx_add_repo: false
 
 ssh_passphrase: "{{ lookup('env', 'SSH_PASS') | default('KeyWillBeGeneratedWithAPassphrase') }}"
@@ -8,4 +8,4 @@ use_docker: true
 use_opentofu: false
 use_powershell: true
 use_terraform: true
-terraform_ver: 1.8.2
+terraform_ver: 1.9.8
