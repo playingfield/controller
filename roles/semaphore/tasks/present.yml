@@ -112,43 +112,24 @@
     - "{{ semaphore_config_dir }}"
     - /home/semaphore/tmp
 
-- name: Create python3.12 venv
-  become: true
-  become_user: semaphore
-  ansible.builtin.command: /usr/bin/python3.12 -m venv venv --upgrade-deps
-  args:
-    chdir: /home/semaphore
-    creates: /home/semaphore/venv
-  notify: Requirements update
-
 - name: Copy requirements for Semaphore
   ansible.builtin.copy:
-    src: "{{ item }}"
+    src: requirements.txt
     dest: /home/semaphore/
     owner: semaphore
     group: semaphore
     mode: '0640'
-  loop:
-    - requirements.txt
-    - requirements.yml
-    - collections.yml
-  notify: Requirements update
+  notify: Restart semaphore
 
-- name: Manage requirements update service
-  ansible.builtin.template:
-    src: "requirements.{{ item }}.j2"
-    dest: "/etc/systemd/system/requirements.{{ item }}"
-    mode: '0644'
-  loop:
-    - 'service'
-    - 'timer'
-
-- name: Enable requirements update service
-  ansible.builtin.systemd:
-    name: requirements.timer
-    enabled: true
-    state: started
-    daemon_reload: true
+- name: Create virtual environment and install requirements into it
+  become: true
+  become_user: semaphore
+  ansible.builtin.pip:
+    requirements: '/home/semaphore/requirements.txt'
+    virtualenv: '/home/semaphore/venv'
+    virtualenv_python: python3.12
+    state: present
+  notify: Restart semaphore
 
 - name: Deploy Semaphore Config
   become: true

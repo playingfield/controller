@@ -1,10 +1,4 @@
 ---
-- name: Requirements update
-  ansible.builtin.systemd:
-    name: requirements.service
-    daemon_reload: true
-    state: started
-
 - name: Restart semaphore
   ansible.builtin.systemd:
     name: semaphore
