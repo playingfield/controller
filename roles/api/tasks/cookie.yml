@@ -1,24 +1,9 @@
-- name: Get admin user
-  ansible.builtin.shell: |
-    set -o pipefail;
-    grep SEMAPHORE_ADMIN= {{ semaphore_env }} | cut -d= -f2 | sed 's/"//g'
-  register: admin_user
-  changed_when: false
-  no_log: "{{ not debug }}"
-
-- name: Get admin password
-  ansible.builtin.shell: |
-    set -o pipefail;
-    grep SEMAPHORE_ADMIN_PASSWORD= {{ semaphore_env }} | cut -d= -f2
-  register: admin_pass
-  changed_when: false
-  no_log: "{{ not debug }}"
-
+---
 - name: Set facts
   ansible.builtin.set_fact:
-    semaphore_admin_user: "{{ admin_user.stdout }}"
-    semaphore_admin_password: "{{ admin_pass.stdout[1:] }}="
-  no_log: "{{ not debug }}"
+    semaphore_admin_user: "{{ vault_admin_user }}"
+    semaphore_admin_password: "{{ vault_admin_password }}"
+  no_log: true
 
 - name: Set API token
   ansible.builtin.uri:
@@ -30,10 +15,12 @@
     status_code: 204
     timeout: 5
   register: login_response
-  no_log: "{{ not debug }}"
+  no_log: true
 
 - name: Save Cookie
   when: login_response.status == 204
   ansible.builtin.set_fact:
     cookie: "{{ login_response.cookies_string }}"
-  no_log: "{{ not debug }}"
+  no_log: true
+
+-

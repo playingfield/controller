@@ -3,9 +3,6 @@
 - name: Authenticate
   ansible.builtin.include_tasks: cookie.yml
 
-- name: Backup
-  ansible.builtin.include_tasks: backup.yml
-
 - name: Create Controller
   ansible.builtin.include_tasks: controller.yml
 
