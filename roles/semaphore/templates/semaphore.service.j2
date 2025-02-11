@@ -21,9 +21,7 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=semaphore
 
-ExecStart=/bin/bash -c 'rm -rf /home/semaphore/venv \
-                        && python3.12 -m venv /home/semaphore/venv \
-                        && source /home/semaphore/venv/bin/activate \
+ExecStart=/bin/bash -c 'source /home/semaphore/venv/bin/activate \
                         && /usr/bin/semaphore server --config /etc/semaphore/config.json'
 
 [Install]
