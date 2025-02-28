@@ -158,38 +158,44 @@ source "virtualbox-iso" "controller" {
   vm_name                 = "controller"
 }
 
-# WIP: Unable to mount root fs on unknown-block(0,0)
+# https://github.com/AlmaLinux/cloud-images/blob/main/almalinux-8-vagrant.pkr.hcl
 source "vmware-iso" "controller" {
   boot_command = [
     "c<wait>",
-    "linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=AlmaLinux-8-10-x86_64-dvd ro ",
-    "inst.text ",
-    "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>",
+    "linuxefi /images/pxeboot/vmlinuz",
+    " inst.stage2=hd:LABEL=AlmaLinux-8-10-x86_64-dvd ro",
+    " inst.text biosdevname=0 net.ifnames=0",
+    " inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
+    "<enter>",
     "initrdefi /images/pxeboot/initrd.img<enter>",
-    "root=/dev/sda1<enter>",
     "boot<enter><wait>"
   ]
   boot_wait           = "10s"
   cpus                = 4
   disk_size           = 65536
-  guest_os_type       = "rhel8_64Guest"
+  firmware            = "efi"
+  guest_os_type       = "centos8_64Guest"
   headless            = false
   http_directory      = "kickstart"
   iso_checksum        = "${var.iso_checksum}"
   iso_urls            = ["${var.iso_url1}", "${var.iso_url2}"]
   memory               = 8192
+  network_adapter_type = "vmxnet3"
   output_directory    = "output-images"
   shutdown_command    = "shutdown -P now"
   ssh_password        = "vagrant"
   ssh_username        = "root"
   ssh_wait_timeout    = "10000s"
-  tools_upload_flavor = "linux"
+  version             = 21
   vm_name             = "controller"
   vmdk_name           = "controller"
+  vmx_remove_ethernet_interfaces = true
   vmx_data = {
-    "firmware"         = "efi"
-    "svga.autodetect"  = true
-    "usb_xhci.present" = true
+    "cpuid.coresPerSocket" = "1"
+  }
+  vmx_data_post = {
+    "memsize"  = 1024
+    "numvcpus" = 1
   }
 }
 
