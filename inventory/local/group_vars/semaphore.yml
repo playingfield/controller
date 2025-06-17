@@ -1,7 +1,7 @@
 ---
 semaphore_web_root: 'https://controller'
 nginx_add_repo: false
-
+vault_admin_user: admin
 ssh_passphrase: "{{ lookup('env', 'SSH_PASS') | default('KeyWillBeGeneratedWithAPassphrase') }}"
 
 use_docker: true
