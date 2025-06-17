@@ -121,14 +121,22 @@
     mode: '0640'
   notify: Restart semaphore
 
-- name: Create virtual environment and install requirements into it
+- name: Create virtual environment
+  become: true
+  become_user: semaphore
+  ansible.builtin.command:
+  args:
+    cmd: python3.12 -m venv venv
+    chdir: /home/semaphore
+    creates: /home/semaphore/venv/bin/pip
+
+- name: Install python libraries
   become: true
   become_user: semaphore
   ansible.builtin.pip:
     requirements: '/home/semaphore/requirements.txt'
-    virtualenv: '/home/semaphore/venv'
-    virtualenv_python: python3.12
-    state: present
+    executable: '/home/semaphore/venv/bin/pip'
+    state: present  # or 'latest' to upgrade the requirements
   notify: Restart semaphore
 
 - name: Deploy Semaphore Config
