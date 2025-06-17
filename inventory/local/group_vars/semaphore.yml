@@ -5,6 +5,9 @@ vault_admin_user: admin
 ssh_passphrase: "{{ lookup('env', 'SSH_PASS') | default('KeyWillBeGeneratedWithAPassphrase') }}"
 
 use_docker: true
+use_helm: true
+use_k9s: true
+use_krew: true
 use_opentofu: false
 use_powershell: true
 use_terraform: true
