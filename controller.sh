@@ -1,9 +1,9 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 # vagrant inventory, do not use for production
 # Runs on a RHEL8 VM
 # dir of script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
-
+echo "$SCRIPT_DIR"
 if [ -e /etc/redhat-release ]; then
    major=$(tr -dc '0-9.' <  /etc/redhat-release | cut -d \. -f1)
    if ((major == 8))
@@ -26,10 +26,11 @@ ansible --version
 
 if [ ! -d "$SCRIPT_DIR/.git" ]; then
     echo 'Running in Packer or Vagrant'
+    cd "$SCRIPT_DIR"
     (git clone https://github.com/playingfield/controller.git || /bin/true)
+    export SCRIPT_DIR="$SCRIPT_DIR/controller"
 fi
 cd "$SCRIPT_DIR" && source ansible.sh && ./prepare.sh
-# export these variables!
 if [ -z "${DB_PASS}" ]; then
     export DB_PASS="your_database_password"
 fi

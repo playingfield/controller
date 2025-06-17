@@ -161,19 +161,14 @@ source "virtualbox-iso" "controller" {
 # https://github.com/AlmaLinux/cloud-images/blob/main/almalinux-8-vagrant.pkr.hcl
 source "vmware-iso" "controller" {
   boot_command = [
-    "c<wait>",
-    "linuxefi /images/pxeboot/vmlinuz",
-    " inst.stage2=hd:LABEL=AlmaLinux-8-10-x86_64-dvd ro",
-    " inst.text biosdevname=0 net.ifnames=0",
-    " inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
-    "<enter>",
-    "initrdefi /images/pxeboot/initrd.img<enter>",
-    "boot<enter><wait>"
+    "<up><wait><tab>",
+    " inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
+    " net.ifnames=0 biosdevname=0",
+    "<enter>"
   ]
   boot_wait           = "10s"
   cpus                = 4
   disk_size           = 65536
-  firmware            = "efi"
   guest_os_type       = "centos8_64Guest"
   headless            = false
   http_directory      = "kickstart"
@@ -189,14 +184,6 @@ source "vmware-iso" "controller" {
   version             = 21
   vm_name             = "controller"
   vmdk_name           = "controller"
-  vmx_remove_ethernet_interfaces = true
-  vmx_data = {
-    "cpuid.coresPerSocket" = "1"
-  }
-  vmx_data_post = {
-    "memsize"  = 1024
-    "numvcpus" = 1
-  }
 }
 
 # https://developer.hashicorp.com/packer/plugins/builders/hyperv/iso
@@ -303,10 +290,6 @@ build {
     script          = "files/cleanup.sh"
   }
 
-  provisioner "shell" {
-    execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["controller.sh"]
-  }
   post-processors {
     post-processor "vagrant" {
       except               = ["azure-arm.controller"]
@@ -314,11 +297,6 @@ build {
       compression_level    = 9
       output               = "output-images/controller.x86_64.{{.Provider}}.box"
       vagrantfile_template = "Vagrantfile.template"
-    }
-    post-processor "shell-local" {
-      keep_input_artifact = true
-      inline              = ["ovftool output-images/controller.vmx output-images/controller.ova"]
-      only                = ["vmware-ova"]
     }
     post-processor "vagrant-cloud" {
       access_token = "${var.cloud_token}"
