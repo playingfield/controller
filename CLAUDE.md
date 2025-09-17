@@ -83,7 +83,7 @@ sudo grep ADMIN /home/semaphore/.env
 
 ### Host Groups
 - **database**: PostgreSQL installation target
-- **semaphore**: SemaphoreUI and tools installation target  
+- **semaphore**: SemaphoreUI and tools installation target
 - **web**: Nginx reverse proxy target
 - **proxy**: Optional forward proxy (Squid) target
 
@@ -122,4 +122,4 @@ For development with VirtualBox/VMware/Hyper-V:
 - Use `Vagrantfile.template` as starting point
 - `controller.sh` script handles VM provisioning
 - Default inventory: `inventory/local/hosts`
-- 
+-
