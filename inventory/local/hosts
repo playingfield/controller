@@ -5,12 +5,15 @@ control
 database
 semaphore
 web
+proxy
 
 [database]
 controller ansible_host=localhost
 [semaphore]
 controller ansible_host=localhost
 [web]
+controller ansible_host=localhost
+[proxy]
 controller ansible_host=localhost
 
 [local:vars]
