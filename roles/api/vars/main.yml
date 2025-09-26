@@ -1,3 +1,5 @@
 ---
 # shared with semaphore role
 semaphore_env: /home/semaphore/.env
+semaphore_admin_user: "{{ vault_admin_user }}"
+semaphore_admin_password: "{{ vault_admin_password }}"

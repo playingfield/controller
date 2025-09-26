@@ -25,9 +25,3 @@ semaphore_admin_user_manage: true
 # Use ansible-vault to encrypt values vars/main.yml refers to the vault_* variables
 vault_admin_user: admin
 vault_admin_email: nobody@localhost.localdomain
-# These default values should be generated for your own environment.
-# Generated with `head -c32 /dev/urandom | base64`
-vault_access_key_encryption: 'POHO2/pWKVRIVmV8gJGlcF9I/RNBHplD5Ki4aMWnz6M='
-vault_admin_password: '/nOKL/PaudDI1J80KB0pQYPGlvAoaMg8ea71MdvS2tI='
-vault_cookie_encryption: 'q0luUwCsnzAUBjUYNHCNU5VpZEvjy0fPS698t9SvBYQ='
-vault_cookie_hash: 'w9vz6qSsDIQVLM7kC42QdXC/YoIgH9MFWIONIMSFfxc='
