@@ -21,4 +21,4 @@ roles:
   - src: bbaassssiiee.postgres_ssl
     version: 1.1.0
   - src: bbaassssiiee.proxy
-    version: 1.0.3
+    version: 1.0.5
